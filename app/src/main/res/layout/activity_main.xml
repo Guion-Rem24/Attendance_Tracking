@@ -19,18 +19,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-<!--            <Button-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:id="@+id/drawer_button"-->
-<!--                android:icon="@android:drawable/ic_menu_agenda"/>-->
-
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             </androidx.appcompat.widget.Toolbar>
@@ -47,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="Hello World!"
                 />
+
         </RelativeLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -70,34 +65,16 @@
 <!--    android:layout_height="match_parent"-->
 <!--    tools:context=".MainActivity" >-->
 
-<!--    <menu>-->
 
-<!--        <item-->
-<!--            android:id="@+id/optionsMenu_Pref"-->
-<!--            android:title="@strings/option_menu_Pref"-->
-<!--            android:icon="@android:drawable/ic_menu_preferences"-->
-<!--            />-->
-<!--        <item-->
-<!--            android:id="@+id/optionsMenu_help"-->
-<!--            android:title="@strings/option_menu_help"-->
-<!--            android:icon="@android:drawable/ic_menu_help"-->
-<!--            />-->
-<!--        <item-->
-<!--            android:id="@+id/optionsMenu_info"-->
-<!--            android:title="@strings/option_menu_info"-->
-<!--            android:icon="@android:drawable/ic_menu_info_details"-->
-<!--            />-->
 
-<!--    </menu>-->
-
-<!--&lt;!&ndash;    <com.example.attendance_tracking.CalendarView&ndash;&gt;-->
-<!--&lt;!&ndash;        android:id="@+id/calendar_view"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:layout_height="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;        app:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;        app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;        app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;        app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
+<!--    <com.example.attendance_tracking.CalendarView-->
+<!--        android:id="@+id/calendar_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 
 

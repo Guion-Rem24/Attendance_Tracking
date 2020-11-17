@@ -104,6 +104,7 @@ public class CalendarView extends LinearLayout {
                 //dayView.setText(String.valueOf((i * WEEK_7) + (j + 1))); // TODO:DEBUG
                 dayView.setGravity(Gravity.RIGHT); // 右寄せで表示
                 dayView.setClickable(true);//Textviewをクリック可能にする
+                // textをクリックできないと落ちる
                 dayView.setId(View.generateViewId());
                 //個々の日付の余白設定、左、右、トップ、ボトムの順
                 dayView.setPadding(0, padding, paddingR, padding*10);

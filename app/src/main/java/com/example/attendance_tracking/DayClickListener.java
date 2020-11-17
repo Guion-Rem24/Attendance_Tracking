@@ -15,7 +15,9 @@ public class DayClickListener extends AppCompatActivity implements View.OnClickL
     public void onClick(View view){
         TextView textView = (TextView) view.getRootView();
         String day = textView.getText().toString();
-        Intent intent = new Intent(String.valueOf(textView));//, ScheduleDetail.class);
+
+        // とりあえずMainActivityに戻るように設定
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

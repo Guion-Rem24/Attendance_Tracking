@@ -2,6 +2,7 @@ package com.example.attendance_tracking;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -27,10 +30,17 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    static String TAG = "Main Activity";
+    static String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(pref.getBoolean("fix_Calendar_Panel",true)) {
+            Intent intent = new android.content.Intent(this, CalendarActivity.class);
+            startActivity(intent);
+            return;
+        }
+
         // レイアウトリソースの読み込み
         setContentView(R.layout.activity_main);
 
@@ -38,7 +48,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Main");
 
-        setSupportActionBar(toolbar); // バグある
+        // ManifestのTheme設定がおかしかった
+        // 修正済み
+        setSupportActionBar(toolbar);
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         // DrawerToggle
@@ -55,13 +68,19 @@ public class MainActivity extends AppCompatActivity
 
         // NavigationView Listener
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
-        navigationView.setNavigationItemSelectedListener(//this
-                new NavigationView.OnNavigationItemSelectedListener() {
+        navigationView.setNavigationItemSelectedListener(this);
+        /*
+        new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     return false;
                 }
-            });
+            }
+            と
+         item -> false
+
+         が同値
+         */
 
 //        leanBackMode();
         {
@@ -86,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         switch(mItem.getItemId()){
             case R.id.optionsMenu_Pref:
                 Toast.makeText(getApplicationContext(),"'設定' is selected...", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "...onOptionsItemSelected is active");
                 Intent intent = new android.content.Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
@@ -106,22 +126,42 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item){
         int id = item.getItemId();
+        Intent intent;
+
+        Log.d(TAG,"------------id: "+id+"------------");
 
         switch(id){
             case R.id.menu_item1:
                 Log.d(TAG, "Item 1 Selected!");
+                intent = new android.content.Intent(this, CalendarActivity.class);
                 break;
             case R.id.menu_item2:
                 Log.d(TAG, "Item 2 Selected!");
+                intent = null;
+//                intent = new android.content.Intent(this, CalendarActivity.class);
                 break;
             case R.id.menu_item3:
+                intent = null;
                 Log.d(TAG, "Item 3 Selected!");
+//                intent = new android.content.Intent(this, CalendarActivity.class);
                 break;
             case R.id.menu_item4:
+                intent = null;
                 Log.d(TAG, "Item 4 Selected!");
+//                intent = new android.content.Intent(this, CalendarActivity.class);
+                break;
+            default:
+                intent = null;
                 break;
         }
+        if(intent == null){
+            Toast.makeText(getApplicationContext(), "intent in Drawer is null pointer", Toast.LENGTH_LONG).show();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        }
 
+        startActivity(intent);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -149,9 +189,4 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState){
-//        super.onSaveInstanceState(outState);
-//        outState.putBoolean("startForCalendar",true);
-//    }
 }
