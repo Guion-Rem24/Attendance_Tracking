@@ -8,11 +8,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Attendance_Tracking">
+        android:theme="@style/MyTheme">
         <activity
             android:name=".SampleDrawerActivity"
             android:label="@string/title_activity_sample_drawer"
-            android:theme="@style/Theme.Attendance_Tracking.NoActionBar"></activity>
+            android:theme="@style/MyTheme"/>
+        <!--            android:theme="@style/Theme.Attendance_Tracking.NoActionBar" -->
         <!-- changed::: android:theme="@style/Theme.Attendance_Tracking" -->
         <meta-data
             android:name="com.google.android.actions"

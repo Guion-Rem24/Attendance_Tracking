@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Main");
 
-//        setSupportActionBar(toolbar); // バグある
+        setSupportActionBar(toolbar); // バグある
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         // DrawerToggle
