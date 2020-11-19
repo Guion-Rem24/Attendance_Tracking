@@ -39,6 +39,15 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new android.content.Intent(this, CalendarActivity.class);
             startActivity(intent);
             return;
+        }else{
+            {
+                Context context = getApplicationContext();
+                CharSequence text = "Start MainActivity...";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
         }
 
         // レイアウトリソースの読み込み
@@ -83,14 +92,7 @@ public class MainActivity extends AppCompatActivity
          */
 
 //        leanBackMode();
-        {
-            Context context = getApplicationContext();
-            CharSequence text = "Start MainActivity...";
-            int duration = Toast.LENGTH_SHORT;
 
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-        }
     }
 
     @Override

@@ -31,6 +31,9 @@
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
 
+    <!-- Fragment Strings -->
+    <string name="daydetail_fragment_test">Welcome to DayDetail Fragment</string>
+
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>

@@ -1,5 +1,7 @@
 package com.example.attendance_tracking;
 
+// 解決するまで使用禁止
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -13,13 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IdRes;
+
 import com.example.attendance_tracking.DayClickListener;
 import com.example.attendance_tracking.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class CalendarView extends LinearLayout {
+public class _CalendarView extends LinearLayout {
 
     public int beginningWeek = Calendar.SUNDAY;
     public int todayColor = Color.RED;
@@ -43,7 +47,7 @@ public class CalendarView extends LinearLayout {
     }
 
     @SuppressLint("ResourceType")
-    public CalendarView(Context context, AttributeSet attrs) {
+    public _CalendarView(Context context, AttributeSet attrs) {
 
         super(context, attrs);
         this.setOrientation(VERTICAL);
@@ -101,10 +105,10 @@ public class CalendarView extends LinearLayout {
             // 1週間分の日付ビュー作成
             for (int j = 0; j < WEEK_7; j++) {
                 TextView dayView = new TextView(context);
-                //dayView.setText(String.valueOf((i * WEEK_7) + (j + 1))); // TODO:DEBUG
+                dayView.setText(String.valueOf((i * WEEK_7) + (j + 1))); // TODO:DEBUG
                 dayView.setGravity(Gravity.RIGHT); // 右寄せで表示
                 dayView.setClickable(true);//Textviewをクリック可能にする
-                // textをクリックできないと落ちる
+                // textをクリックできないと落ちる & 二度目のクリックで落ちる
                 dayView.setId(View.generateViewId());
                 //個々の日付の余白設定、左、右、トップ、ボトムの順
                 dayView.setPadding(0, padding, paddingR, padding*10);

@@ -1,24 +1,35 @@
 package com.example.attendance_tracking;
 
+// 解決するまで使用禁止
+
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class DayClickListener extends AppCompatActivity implements View.OnClickListener {
-
+public class DayClickListener implements View.OnClickListener {
+    final String TAG = "DayClickListener";
     @Override
     public void onClick(View view){
         TextView textView = (TextView) view.getRootView();
-        String day = textView.getText().toString();
+//        int id = textView.getId();
 
+//        final String str = id+":: generated id";
+//        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG).show();
+        String day = textView.getText().toString();
+        CharSequence text = day+" is touched";
+//        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+        Log.v(TAG, "---------------");
         // とりあえずMainActivityに戻るように設定
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, MainActivity.class);
+//        startActivity(intent);
     }
 }
 
