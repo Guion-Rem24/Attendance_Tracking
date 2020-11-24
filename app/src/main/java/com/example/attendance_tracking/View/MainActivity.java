@@ -1,4 +1,4 @@
-package com.example.attendance_tracking;
+package com.example.attendance_tracking.View;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,15 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
+import com.example.attendance_tracking.R;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;

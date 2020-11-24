@@ -1,4 +1,4 @@
-package com.example.attendance_tracking;
+package com.example.attendance_tracking.View;
 
 import android.os.Bundle;
 
@@ -8,17 +8,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceFragmentCompat;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import com.example.attendance_tracking.R;
 
-import java.util.Objects;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PreferenceFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Preference_Fragment extends PreferenceFragmentCompat {
 //参考ページ
 //    https://mnoqlo.hatenablog.com/entry/2018/10/12/214802

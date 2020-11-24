@@ -1,18 +1,14 @@
-package com.example.attendance_tracking;
+package com.example.attendance_tracking.View;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
-import java.util.Objects;
+import com.example.attendance_tracking.R;
 
 public class SettingsActivity extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 

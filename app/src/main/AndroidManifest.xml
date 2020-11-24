@@ -9,22 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
+        <activity android:name=".View.AddWorkingHoursActivity"></activity>
         <activity
             android:name=".SampleDrawerActivity"
             android:label="@string/title_activity_sample_drawer"
-            android:theme="@style/MyTheme"/>
-        <!--            android:theme="@style/Theme.Attendance_Tracking.NoActionBar" -->
+            android:theme="@style/MyTheme" /> <!-- android:theme="@style/Theme.Attendance_Tracking.NoActionBar" -->
         <!-- changed::: android:theme="@style/Theme.Attendance_Tracking" -->
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/preference" />
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".View.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".CalendarActivity" />
-        <activity android:name=".DayClickListener" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".View.CalendarActivity" />
+        <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

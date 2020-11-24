@@ -1,17 +1,19 @@
-package com.example.attendance_tracking;
+package com.example.attendance_tracking.View;
 
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.Calendar;
+import com.example.attendance_tracking.R;
 
 
 public class CalendarFragment extends Fragment implements CalendarView.OnDateChangeListener{
@@ -28,6 +30,11 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     private DayDetailFragment.OnFragmentInteractionListener mListener;
     private CalendarView calendarView;
     private TextView dayView;
+
+    private final String TAG = "CalendarFragment";
+
+
+    public CalendarFragment getFragment(){ return this; }
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -60,6 +67,7 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Log.v(TAG, "====on Create ====");
 
 
     }
@@ -80,6 +88,8 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
 
         calendarView.setOnDateChangeListener(this);
 
+        Log.v(TAG, "====on CreateView ====");
+
 
         return view;
     }
@@ -98,11 +108,13 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     @Override
     public void onResume(){
         super.onResume();
+        Log.v(TAG, "====on Resume ====");
     }
 
     @Override
     public void onPause(){
         super.onPause();
+        Log.v(TAG, "====on Pause ====");
     }
 
 
@@ -115,24 +127,11 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     public void onSelectedDayChange(CalendarView view, int year, int month,
                                     int dayOfMonth) {
 
-//        Intent varIntent = new Intent(getApplication(), MainActivity.class);
-//
-////            dayView.setText("Date: "+year+"/"+month+"/"+dayOfMonth);
-//        startActivity(varIntent);
-
-//        DayDetailFragment fragment = DayDetailFragment.newInstance();
-
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.add(R.id.fragment_daydetail, fragment);
-//        transaction.commit();
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.fragment_calendar_root,fragment)
-//                .commit();
-
-//        mMode = 1;
+        Log.v(TAG, "====on SelectedDayChange ====");
         CalendarActivity activity = (CalendarActivity) getActivity();
         activity.mMode = 1;
+        Toast.makeText(activity.getApplicationContext(), "touched day button...", Toast.LENGTH_LONG).show();
+        activity.onResume();
 
     }
 }

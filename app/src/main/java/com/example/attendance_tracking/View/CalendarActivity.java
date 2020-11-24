@@ -1,4 +1,4 @@
-package com.example.attendance_tracking;
+package com.example.attendance_tracking.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,11 +16,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.attendance_tracking.OnBackKeyPressedListener;
+import com.example.attendance_tracking.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 public class CalendarActivity extends AppCompatActivity
@@ -27,8 +31,13 @@ public class CalendarActivity extends AppCompatActivity
                     DayDetailFragment.OnFragmentInteractionListener {
 
     static String TAG = "CalendarActivity";
+    private Fragment calendarFragment;
+    private Fragment daydetailFragment;
+
     private Fragment currentFragment;
-    int mMode = 0;
+    int mMode;
+
+    private CalendarActivity getThisActivity(){return this;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +50,14 @@ public class CalendarActivity extends AppCompatActivity
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+            Log.v(TAG, "-------- on Create --------");
         }
 
         currentFragment = null;
+
+        calendarFragment = null;
+        daydetailFragment = null;
+        mMode = 0;
 
         // ToolBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.calendar_toolbar);
@@ -67,52 +81,15 @@ public class CalendarActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.Calendar_navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*
-        calendarView.setOnDateChangeListener((CalendarView view, int year, int month, int dayOfMonth) -> {
-
-            DayDetailFragment fragment = new DayDetailFragment();
-
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_daydetail, fragment);
-
-            transaction.commit();
-            Toast.makeText(
-                    getApplicationContext(),
-                    "Selected Date... " + "Year:" + year + "Month:" + month + "Day:" + dayOfMonth,
-                    Toast.LENGTH_LONG).show();
-//            dayView.setText("Date: "+year+"/"+month+"/"+dayOfMonth);
-        });
-
-         */
-
-        CalendarFragment fragment = CalendarFragment.newInstance();
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_calendar_root, fragment)
-                .commit();
-
-
-
-        /*
-        Button button = findViewById(R.id.main_button);
-        //ボタンが押下されたら、Fragmentを表示する
-        main_button.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addWorkHoursButton = findViewById(R.id.button_add_working_hours);
+        addWorkHoursButton.setOnClickListener(new CalendarView.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                //fragmentを呼びだす
-                // Fragmentを作成します
-                MainFragment fragment = new MainFragment();
-                // Fragmentの追加や削除といった変更を行う際は、Transactionを利用します
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                // 新しく追加を行うのでaddを使用します
-                transaction.add(R.id.fragment_layout, fragment);
-                // 最後にcommitを使用することで変更を反映します
-                transaction.commit();
+            public void onClick(View v){
+                Intent intent = new Intent(getThisActivity(), AddWorkingHoursActivity.class);
+                startActivity(intent);
+                Log.v(TAG,"== fab pushed ==");
             }
         });
-
-         */
     }
 
 
@@ -198,35 +175,70 @@ public class CalendarActivity extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed(){
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("daydetailBackPressed");
+        if (fragment instanceof OnBackKeyPressedListener) {
+            ((OnBackKeyPressedListener) fragment).onBackPressed();
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
-//        if(mMode == 1){
-//            currentFragment = DayDetailFragment.newInstance();
-//        }else if(mMode == 0){
-//            currentFragment = CalendarFragment.newInstance();
-//        }
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.fragment_calendar_root, currentFragment)
-//                .commit();
+
+        if(mMode == 1) { // DayDetailFragment への切り替え
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.detach(calendarFragment);
+            if(daydetailFragment == null) {
+                daydetailFragment = DayDetailFragment.newInstance();
+                transaction.add(R.id.fragment_calendar_root, daydetailFragment, "daydetailBackPressed")
+                    .addToBackStack(null);
+                // addToBackStack(null) がないと，BackPressedでActivityがPauseするので，必須．
+            }else {
+                transaction.attach(daydetailFragment);
+            }
+
+            transaction.commit();
+            Log.v(TAG, "==== Changing DayDetailFragment... ====");
+
+        } else if(mMode == 0){ // CalendarFragment への切り替え
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            if(calendarFragment == null){
+                calendarFragment = CalendarFragment.newInstance();
+            }
+
+            if(daydetailFragment == null){
+                transaction.replace(R.id.fragment_calendar_root, calendarFragment).commit();
+                Log.v(TAG, "==== Fragment Replaced ====");
+            }else{
+                transaction.detach(daydetailFragment);
+                transaction.attach(calendarFragment);
+                transaction.commit();
+                daydetailFragment = null;
+                Log.v(TAG, "==== Fragment Detached ====");
+            }
+            Log.v(TAG, "==== Changing CalendarFragment... ====");
+        }
+        Log.v(TAG, "==== on Resume ====");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        if(currentFragment != null){
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(currentFragment)
-                    .commit();
-            currentFragment = null;
-        }
+//        if(currentFragment != null){
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .remove(currentFragment)
+//                    .commit();
+//            currentFragment = null;
+//        }
+        Log.v(TAG, "====on Pause ====");
     }
 
     public void setupBackButton(boolean enableBackButton){
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(enableBackButton);
     }
-
-
 }
