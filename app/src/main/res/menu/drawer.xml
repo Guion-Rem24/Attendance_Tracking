@@ -3,7 +3,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/menu_item1"
+            android:id="@+id/menu_calendar"
             android:icon="@android:drawable/ic_menu_my_calendar"
             android:title="Calendar" />
         <item
@@ -12,12 +12,12 @@
             android:title="Places" />
     </group>
 
-    <item android:title="TITLE!">
+    <item android:title="@string/item_employeeMenu">
         <menu>
             <item
-                android:id="@+id/menu_item3"
-                android:icon="@android:drawable/ic_menu_save"
-                android:title="Save" />
+                android:id="@+id/menu_editEmployee"
+                android:icon="@android:drawable/ic_menu_edit"
+                android:title="@string/title_editEmployee" />
             <item
                 android:id="@+id/menu_item4"
                 android:icon="@android:drawable/ic_menu_delete"

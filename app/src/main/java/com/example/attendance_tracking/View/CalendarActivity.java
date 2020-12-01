@@ -31,8 +31,11 @@ public class CalendarActivity extends AppCompatActivity
                     DayDetailFragment.OnFragmentInteractionListener {
 
     static String TAG = "CalendarActivity";
+    public static final String EXTRA_DATA = "com.example.attendance_tracking.calendaractivity.DATA";
     private Fragment calendarFragment;
     private Fragment daydetailFragment;
+
+    private int moveMainActivity = 1;
 
     private Fragment currentFragment;
     int mMode;
@@ -131,8 +134,8 @@ public class CalendarActivity extends AppCompatActivity
 //        Log.d(TAG,"------------id: "+id+"------------");
 
         switch(id){
-            case R.id.menu_item1:
-                Log.d(TAG, "Item 1 Selected!");
+            case R.id.menu_calendar:
+                Log.d(TAG, "CalendarMenu Selected...");
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.Calendar_drawerLayout);
                 drawer.closeDrawer(GravityCompat.START);
                 return false;
@@ -141,10 +144,9 @@ public class CalendarActivity extends AppCompatActivity
                 intent = null;
 //                intent = new android.content.Intent(this, CalendarActivity.class);
                 break;
-            case R.id.menu_item3:
-                intent = null;
-                Log.d(TAG, "Item 3 Selected!");
-//                intent = new android.content.Intent(this, CalendarActivity.class);
+            case R.id.menu_editEmployee:
+                Log.d(TAG, "EditEmployeeMenu Selected...");
+                intent = new android.content.Intent(this, EditEmployeeActivity.class);
                 break;
             case R.id.menu_item4:
                 intent = null;
@@ -157,13 +159,13 @@ public class CalendarActivity extends AppCompatActivity
         }
         if(intent == null){
             Toast.makeText(getApplicationContext(), "intent in Drawer is null pointer", Toast.LENGTH_LONG).show();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.Calendar_drawerLayout);
             drawer.closeDrawer(GravityCompat.START);
             return false;
         }
 
         startActivity(intent);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.Calendar_drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -177,9 +179,21 @@ public class CalendarActivity extends AppCompatActivity
     @Override
     public void onBackPressed(){
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("daydetailBackPressed");
-        if (fragment instanceof OnBackKeyPressedListener) {
-            ((OnBackKeyPressedListener) fragment).onBackPressed();
+        if(fragment != null) {
+            if (fragment instanceof OnBackKeyPressedListener) {
+                ((OnBackKeyPressedListener) fragment).onBackPressed();
+            }
+            return;
         }
+
+        Log.v(TAG, "--- on Back Pressed ---");
+        MainActivity activity = new MainActivity();
+        Intent intent = new android.content.Intent(this, MainActivity.class);
+//        intent.putExtra(EXTRA_DATA, moveMainActivity);
+        int RequestCode = 2;
+        setResult(RESULT_OK, intent);
+        startActivityForResult(intent, RequestCode);
+
         super.onBackPressed();
     }
 

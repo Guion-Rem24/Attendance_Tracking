@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
-        <activity android:name=".View.AddWorkingHoursActivity"></activity>
+        <activity android:name=".View.EditEmployeeActivity"></activity>
+        <activity
+            android:name=".View.AddWorkingHoursActivity"
+            android:label="@string/title_activity_addWorkingHour"
+            android:theme="@style/MyTheme" />
         <activity
             android:name=".SampleDrawerActivity"
             android:label="@string/title_activity_sample_drawer"

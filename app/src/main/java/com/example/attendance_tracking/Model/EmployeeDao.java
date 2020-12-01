@@ -13,7 +13,7 @@ import java.util.Vector;
 @Dao
 public abstract class EmployeeDao {
     @Query("SELECT * FROM employee_table")
-    public abstract LiveData<List<Employee>> getEmployee();
+    public abstract LiveData<List<Employee>> getEmployees();
 
     @Query("DELETE FROM employee_table")
     public abstract void delete();

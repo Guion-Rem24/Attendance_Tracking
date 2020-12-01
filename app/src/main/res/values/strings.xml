@@ -3,18 +3,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- menu used -->
+    <!-- Preference Strings -->
     <string name="opt_menu_Pref">設定</string>
     <string name="opt_menu_help">ヘルプ</string>
     <string name="opt_menu_info">お知らせ</string>
 
-    <!-- preference strings -->
     <string name="preference_title">各種設定</string>
     <string name="checkbox_01_title">起動時の画面をカレンダーに固定</string>
     <string name="checkbox_01_summary">チェックすると，起動時に表示される画面をカレンダーに固定します</string>
 
-
-    <!-- NavigationBar strings -->
     <string name="action_settings">Settings</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
@@ -34,6 +31,12 @@
     <!-- Fragment Strings -->
     <string name="daydetail_fragment_test">Welcome to DayDetail Fragment</string>
 
+    <!--  Theme Strings  -->
+    <string name="title_activity_addWorkingHour">AddWorkingHoursActivity</string>
+
+    <!--  EditText Strings  -->
+    <string name="edittext_input_name">名前を入力…</string>
+
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
@@ -46,6 +49,11 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+
+    <!--  Menu Strings  -->
+
+    <string name="item_employeeMenu">従業員管理</string>
+    <string name="title_editEmployee">編集</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>

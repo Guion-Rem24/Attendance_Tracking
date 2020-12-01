@@ -29,25 +29,11 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    static String TAG = "MainActivity";
+    final private String TAG = "MainActivity";
+    static public boolean already = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        if(pref.getBoolean("fix_Calendar_Panel",true)) {
-            Intent intent = new android.content.Intent(this, CalendarActivity.class);
-            startActivity(intent);
-            return;
-        }else{
-            {
-                Context context = getApplicationContext();
-                CharSequence text = "Start MainActivity...";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            }
-        }
 
         // レイアウトリソースの読み込み
         setContentView(R.layout.activity_main);
@@ -92,6 +78,36 @@ public class MainActivity extends AppCompatActivity
 
 //        leanBackMode();
 
+        {
+            Context context = getApplicationContext();
+            CharSequence text = "Start MainActivity...";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            Log.v(TAG, "---- onCreate ----");
+        }
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.v(TAG, "---- onResume ----");
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(pref.getBoolean("fix_Calendar_Panel",true) && !already) {
+            Intent intent = new android.content.Intent(this, CalendarActivity.class);
+            startActivity(intent);
+            already = true;
+            Log.v(TAG, "---- "+already+" ----");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int request, int result, Intent intent){
+        super.onActivityResult(request, result, intent);
+        Log.v(TAG, "---- onActivityResult ----");
     }
 
     @Override
@@ -132,8 +148,8 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG,"------------id: "+id+"------------");
 
         switch(id){
-            case R.id.menu_item1:
-                Log.d(TAG, "Item 1 Selected!");
+            case R.id.menu_calendar:
+                Log.d(TAG, "CalendarMenu Selected...");
                 intent = new android.content.Intent(this, CalendarActivity.class);
                 break;
             case R.id.menu_item2:
@@ -141,10 +157,9 @@ public class MainActivity extends AppCompatActivity
                 intent = null;
 //                intent = new android.content.Intent(this, CalendarActivity.class);
                 break;
-            case R.id.menu_item3:
-                intent = null;
-                Log.d(TAG, "Item 3 Selected!");
-//                intent = new android.content.Intent(this, CalendarActivity.class);
+            case R.id.menu_editEmployee:
+                Log.d(TAG, "EditEmployeeMenu Selected...");
+                intent = new android.content.Intent(this, EditEmployeeActivity.class);
                 break;
             case R.id.menu_item4:
                 intent = null;
