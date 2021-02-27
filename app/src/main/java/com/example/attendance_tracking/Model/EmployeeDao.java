@@ -18,7 +18,7 @@ public abstract class EmployeeDao {
     @Query("DELETE FROM employee_table")
     public abstract void delete();
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insert (Employee employee);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

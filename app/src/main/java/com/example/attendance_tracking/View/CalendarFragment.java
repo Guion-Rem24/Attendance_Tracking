@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.attendance_tracking.R;
 
+import com.example.attendance_tracking.View.DayDetailFragment.OnDayDetailFragmentInteractionListener;
+
 
 public class CalendarFragment extends Fragment implements CalendarView.OnDateChangeListener{
 
@@ -27,7 +29,7 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     private String mParam1;
     private String mParam2;
 
-    private DayDetailFragment.OnFragmentInteractionListener mListener;
+    private OnDayDetailFragmentInteractionListener mListener;
     private CalendarView calendarView;
     private TextView dayView;
 
@@ -38,7 +40,7 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
 
     public CalendarFragment() {
         // Required empty public constructor
-        mListener = new DayDetailFragment.OnFragmentInteractionListener() {
+        mListener = new OnDayDetailFragmentInteractionListener() {
             @Override
             public void onFragmentInteraction(Uri uri) {
                 // NOP.
@@ -97,10 +99,10 @@ public class CalendarFragment extends Fragment implements CalendarView.OnDateCha
     @Override
     public void onDetach(){
         super.onDetach();
-        mListener = new DayDetailFragment.OnFragmentInteractionListener(){
+        mListener = new DayDetailFragment.OnDayDetailFragmentInteractionListener(){
             @Override
-            public void onFragmentInteraction(Uri uri){
-                // NOP
+            public void onFragmentInteraction(Uri uri) {
+
             }
         };
     }

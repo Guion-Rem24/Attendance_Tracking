@@ -39,7 +39,7 @@ public class AddWorkingHoursActivity extends AppCompatActivity {
         PushedButton search_button = findViewById(R.id.button_search);
         search_button.setOnClickListener(v -> {
             String name = nameString.getText().toString();
-            Toast.makeText(getApplicationContext(), name + ":: searching..", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), name + " searching..", Toast.LENGTH_LONG).show();
         });
     }
 

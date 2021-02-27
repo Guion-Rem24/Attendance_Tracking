@@ -17,19 +17,19 @@ public class EditEmployeeViewModel extends AndroidViewModel {
     private EmployeeRepository repo;
     private Application app;
 
-    public LiveData<List<Employee>> listEmployees;
+    public LiveData<List<Employee>> mAllEmployees;
 
 
     public EditEmployeeViewModel(Application app){
         super(app);
-        EmployeeDao employeeDao = EmployeeRoomDatabase.getEmployeeDatabase(app).employeeDao();
-        repo = new EmployeeRepository(employeeDao);
-        listEmployees = repo.allEmployees;
+//        EmployeeDao employeeDao = EmployeeRoomDatabase.getEmployeeDatabase(app).employeeDao();
+        repo = new EmployeeRepository(app);
+        mAllEmployees = repo.allEmployees;
     }
 
-    public List<Employee>
-    getAllEmployees(List<Employee> employees){
-        return repo.getAllEmps(employees);
+    public LiveData<List<Employee>>
+    getAllEmployees(){
+        return repo.getAllEmployees();
     }
 
     public List<String>

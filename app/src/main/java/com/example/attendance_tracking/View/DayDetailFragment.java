@@ -36,13 +36,13 @@ public class DayDetailFragment extends Fragment implements OnBackKeyPressedListe
     private String mParam2;
 
     // コールバックの通知先
-    private OnFragmentInteractionListener mListener;
+    private OnDayDetailFragmentInteractionListener mListener;
 
     final String TAG = "DayDetailFragment";
 
     public DayDetailFragment() {
         // Required empty public constructor
-        mListener = new OnFragmentInteractionListener() {
+        mListener = new OnDayDetailFragmentInteractionListener() {
             @Override
             public void onFragmentInteraction(Uri uri) {
                 // NOP.
@@ -110,8 +110,8 @@ public class DayDetailFragment extends Fragment implements OnBackKeyPressedListe
 //    }
 
     protected void onAttachContext(Context context){
-        if(context instanceof OnFragmentInteractionListener){
-            mListener = (OnFragmentInteractionListener) context;
+        if(context instanceof OnDayDetailFragmentInteractionListener){
+            mListener = (OnDayDetailFragmentInteractionListener) context;
         }else{
             throw new RuntimeException(context.toString() +
                     " must implement OnFragmentInteractionListener");
@@ -121,7 +121,7 @@ public class DayDetailFragment extends Fragment implements OnBackKeyPressedListe
     @Override
     public void onDetach(){
         super.onDetach();
-        mListener = new OnFragmentInteractionListener(){
+        mListener = new OnDayDetailFragmentInteractionListener(){
             @Override
             public void onFragmentInteraction(Uri uri){
                 // NOP
@@ -142,7 +142,7 @@ public class DayDetailFragment extends Fragment implements OnBackKeyPressedListe
     }
 
 
-    public interface OnFragmentInteractionListener {
+    public interface OnDayDetailFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
 //

@@ -4,23 +4,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.attendance_tracking.Model.Employee;
 import com.example.attendance_tracking.Model.EmployeeRoomDatabase;
 import com.example.attendance_tracking.R;
 import com.example.attendance_tracking.ViewModel.EditEmployeeViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,51 +35,52 @@ import java.util.List;
 public class EditEmployeeActivity extends AppCompatActivity {
 
     private EditEmployeeViewModel viewModel;
-    private Object EditEmployeeViewModel;
     private final String TAG = "EditEmployeeActivity";
-    private EmployeeRoomDatabase db;
+
+    private Toolbar toolbar;
+    private FloatingActionButton addButton;
+    private RecyclerView recyclerView;
+    private EmployeeListAdapter adapter;
+
+    private ViewPager2 viewPager;
+    private ViewPagerAdapter pagerAdapter;
+
+    private static EditEmployeeFragment editEmployeeFragment;
+    private static NewEmployeeFragment newEmployeeFragment;
+
+
+    private static class FragNum{
+        public static final int NewEmployee=0;
+        public static final int EditEmployee=1;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_employee);
 
-        // instead of Singleton
-        db = EmployeeRoomDatabase.getEmployeeDatabase(this);
+        findViews();
+        setListeners();
+
+        // ViewPager2: Switching Fragments
+        viewPager.setAdapter(pagerAdapter);
 
         // ToolBar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_editEmployee);
         toolbar.setTitle("従業員の編集");
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView_editEmployee);
-        EmployeeListAdapter adapter = new EmployeeListAdapter(this);
-
-        viewModel = new ViewModelProvider(this).get(EditEmployeeViewModel.class);
-//        viewModel.listEmployees.observe(this, this::observe(it));
-        final Observer<List<Employee>> NameObserver = new Observer<List<Employee>>() {
-            @Override
-            public void onChanged(List<Employee> employees) {
-                adapter.setEmployees(viewModel.getAllEmployees(employees));
-                // TODO:getAllNames @return List<String>
-                //      setEmployees( List<Employee> )
-                //      結果的にどこで表示しているかでどっちに合わせるか決まってくる
-                //      おそらく，@return List<Employee> でよい？
-            }
-        };
-
-        if(viewModel.listEmployees != null){
-            Toast.makeText(getApplicationContext(), "'listEmployees' is not NULL...", Toast.LENGTH_LONG).show();
-            viewModel.listEmployees.observe(this, NameObserver);
-        }else{
-            Toast.makeText(getApplicationContext(), "'listEmployees' is NULL...", Toast.LENGTH_LONG).show();
-        }
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        viewModel.getAllEmployees().observe(this, new Observer<List<Employee>>() {
+            @Override
+            public void onChanged(List<Employee> employee) {
+                adapter.setEmployees(employee);
+            }
+        });
 
     }
 
@@ -114,5 +121,60 @@ public class EditEmployeeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
 
         return true;
+    }
+
+    private void findViews(){
+        viewModel = new ViewModelProvider(this).get(EditEmployeeViewModel.class);
+        pagerAdapter = new ViewPagerAdapter(this);
+        viewPager = findViewById(R.id.viewPager_editEmployee);
+        addButton = findViewById(R.id.button_addEmployee);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_editEmployee);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_editEmployee);
+        adapter = new EmployeeListAdapter(this);
+    }
+    private void setListeners(){
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "addButton: [onClick]");
+                viewPager.setCurrentItem(FragNum.NewEmployee);
+                // TODO: viewPagerによるページ切り替え
+            }
+        });
+    }
+
+    public void setToolbarTitle(String title){
+        toolbar.setTitle(title);
+    }
+    public void setToolbarTitle(int id){
+        toolbar.setTitle(id);
+    }
+
+    private static class ViewPagerAdapter extends FragmentStateAdapter {
+        // extends FragmentStateAdapter
+        public ViewPagerAdapter(FragmentActivity fa){
+            super(fa);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            switch(position){
+                case FragNum.NewEmployee:
+                    newEmployeeFragment = new NewEmployeeFragment();
+                    return newEmployeeFragment;
+                case FragNum.EditEmployee:
+                    editEmployeeFragment = new EditEmployeeFragment();
+                    return editEmployeeFragment;
+            }
+            // position given as an argument do not match any FragNums,
+            // returns HomeFragment
+            return null;
+        }
+
+        @Override
+        public int getItemCount() {
+            return 2;
+        }
     }
 }

@@ -18,10 +18,17 @@ import java.util.Vector;
         )
 public class Employee
 {
-    @PrimaryKey @ColumnInfo(name = "id") int id;
-    @ColumnInfo(name = "first_name") public String firstName;
-    @ColumnInfo(name = "first_kana") public String firstKana;
-    @ColumnInfo(name = "family_name") public String familyName;
-    @ColumnInfo(name = "family_kana") public String familyKana;
-    @ColumnInfo(name = "fixed_time") public String fixedTime;
+    @PrimaryKey @ColumnInfo(name = "id")
+    int id;
+
+    @ColumnInfo(name = "first_name")
+    public String firstName;
+    @ColumnInfo(name = "first_kana")
+    public String firstKana;
+    @ColumnInfo(name = "family_name")
+    public String familyName;
+    @ColumnInfo(name = "family_kana")
+    public String familyKana;
+    @ColumnInfo(name = "fixed_time")
+    public String fixedTime;
 }

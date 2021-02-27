@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 
 public class CalendarActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
-                    DayDetailFragment.OnFragmentInteractionListener {
+                    DayDetailFragment.OnDayDetailFragmentInteractionListener {
 
     static String TAG = "CalendarActivity";
     public static final String EXTRA_DATA = "com.example.attendance_tracking.calendaractivity.DATA";

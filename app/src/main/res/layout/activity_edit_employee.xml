@@ -18,6 +18,7 @@
             android:id="@+id/appbar_editEmployee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent">
 
@@ -34,43 +35,21 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout
-            android:id="@+id/subtitle_editEmployee"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager_editEmployee"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/appbar_editEmployee"
-            app:layout_constraintStart_toStartOf="parent"
-            android:orientation="horizontal">
-            <TextView
-                android:paddingStart="20sp"
-                android:layout_height="match_parent"
-                android:layout_width="wrap_content"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="従業員一覧"
-                android:textSize="20sp"/>
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView_editEmployee"
-            android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subtitle_editEmployee"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appbar_editEmployee"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+<!--        <FrameLayout-->
+<!--            android:id="@+id/fragment_editEmployee_root"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/appbar_editEmployee"-->
+<!--            app:layout_constraintLeft_toLeftOf="parent"/>-->
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_addEmployee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:theme="@style/MyTheme"
-            app:srcCompat="@android:drawable/ic_input_add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
