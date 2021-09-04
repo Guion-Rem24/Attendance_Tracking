@@ -28,4 +28,6 @@ public class NewEmployeeFragmentViewModel extends AndroidViewModel {
     public LiveData<List<Employee>> getAllEmployees() {
         return mAllEmployees;
     }
+
+    public void insert(Employee e) { employeeRepository.insert(e); }
 }

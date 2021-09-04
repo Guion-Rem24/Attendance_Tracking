@@ -1,58 +1,70 @@
 package com.example.attendance_tracking.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.LiveData;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.example.attendance_tracking.Model.Employee;
-import com.example.attendance_tracking.Model.EmployeeRoomDatabase;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.attendance_tracking.R;
-import com.example.attendance_tracking.ViewModel.EditEmployeeViewModel;
+
+import com.example.attendance_tracking.View.NewEmployeeFragment.OnNewEmployeeFragmentInteractionListener;
+import com.example.attendance_tracking.View.EditEmployeeFragment.OnEditEmployeeFragmentInteractionListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
-import java.util.List;
 
+public class EditEmployeeActivity
+        extends AppCompatActivity
+        implements OnNewEmployeeFragmentInteractionListener,
+                   OnEditEmployeeFragmentInteractionListener
+{
 
-public class EditEmployeeActivity extends AppCompatActivity {
-
-    private EditEmployeeViewModel viewModel;
     private final String TAG = "EditEmployeeActivity";
 
     private Toolbar toolbar;
-    private FloatingActionButton addButton;
-    private RecyclerView recyclerView;
-    private EmployeeListAdapter adapter;
+    private ConstraintLayout root;
+
 
     private ViewPager2 viewPager;
     private ViewPagerAdapter pagerAdapter;
+    private InputMethodManager inputMethodManager;
 
+    private FloatingActionButton addButton;
+
+    private static EmployeeHomeFragment homeEmployeeFragment;
     private static EditEmployeeFragment editEmployeeFragment;
     private static NewEmployeeFragment newEmployeeFragment;
 
+    static int employeeAsigned;
 
-    private static class FragNum{
+    int mMode;
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+
+    public static class FragNum{
         public static final int NewEmployee=0;
         public static final int EditEmployee=1;
-
+        public static final int HomeEmployee=2;
     }
 
     @Override
@@ -65,22 +77,15 @@ public class EditEmployeeActivity extends AppCompatActivity {
 
         // ViewPager2: Switching Fragments
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setUserInputEnabled(false); // forbid to swipe
+        viewPager.setCurrentItem(FragNum.HomeEmployee, false);
+        viewPager.setOnTouchListener(newEmployeeFragment);
 
         // ToolBar
         toolbar.setTitle("従業員の編集");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        viewModel.getAllEmployees().observe(this, new Observer<List<Employee>>() {
-            @Override
-            public void onChanged(List<Employee> employee) {
-                adapter.setEmployees(employee);
-            }
-        });
 
     }
 
@@ -124,23 +129,13 @@ public class EditEmployeeActivity extends AppCompatActivity {
     }
 
     private void findViews(){
-        viewModel = new ViewModelProvider(this).get(EditEmployeeViewModel.class);
+        root = findViewById(R.id.layout_editemployee_root);
         pagerAdapter = new ViewPagerAdapter(this);
         viewPager = findViewById(R.id.viewPager_editEmployee);
-        addButton = findViewById(R.id.button_addEmployee);
-        toolbar = (Toolbar) findViewById(R.id.toolbar_editEmployee);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_editEmployee);
-        adapter = new EmployeeListAdapter(this);
+        toolbar = findViewById(R.id.toolbar_editEmployee);
     }
     private void setListeners(){
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "addButton: [onClick]");
-                viewPager.setCurrentItem(FragNum.NewEmployee);
-                // TODO: viewPagerによるページ切り替え
-            }
-        });
+
     }
 
     public void setToolbarTitle(String title){
@@ -159,22 +154,71 @@ public class EditEmployeeActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
+            Fragment fragment = null;
             switch(position){
                 case FragNum.NewEmployee:
-                    newEmployeeFragment = new NewEmployeeFragment();
-                    return newEmployeeFragment;
+                    newEmployeeFragment = NewEmployeeFragment.newInstance();
+                    fragment = newEmployeeFragment;
+                    break;
                 case FragNum.EditEmployee:
-                    editEmployeeFragment = new EditEmployeeFragment();
-                    return editEmployeeFragment;
+                    editEmployeeFragment = EditEmployeeFragment.newInstance();
+                    fragment = editEmployeeFragment;
+                    break;
+                case FragNum.HomeEmployee:
+                    homeEmployeeFragment = EmployeeHomeFragment.newInstance();
+                    fragment = homeEmployeeFragment;
+                    break;
             }
             // position given as an argument do not match any FragNums,
             // returns HomeFragment
-            return null;
+            if(fragment == null){
+                throw new NullPointerException();
+            }
+            return fragment;
         }
 
         @Override
         public int getItemCount() {
-            return 2;
+            return 3;
+        }
+    }
+
+    public
+    ViewPager2 getViewPager(){ return viewPager; }
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event){
+//        // hide keyboard when touching background
+//        inputMethodManager.hideSoftInputFromWindow(root.getWindowToken(),
+//                InputMethodManager.HIDE_NOT_ALWAYS);
+//        root.requestFocus();
+//        return true;
+//    }
+
+    @Override
+    public void onBackPressed(){
+        int current = viewPager.getCurrentItem();
+        switch (current){
+            case FragNum.EditEmployee:
+            case FragNum.NewEmployee:
+                viewPager.setCurrentItem(FragNum.HomeEmployee, false);
+                break;
+            case FragNum.HomeEmployee:
+                Intent intent = new android.content.Intent(this, CalendarActivity.class);
+                startActivity(intent);
+        }
+    }
+
+
+    // For EditEmployeeFragment
+    // TODO: How to implement on EditEmployeeFragment?
+    public void onRadioButtonClicked(View view){
+        boolean checked = ((RadioButton) view).isChecked();
+        switch(view.getId()){
+            case R.id.radio_fulltime:
+            case R.id.radio_parttime:
+                employeeAsigned = view.getId();
+                break;
         }
     }
 }

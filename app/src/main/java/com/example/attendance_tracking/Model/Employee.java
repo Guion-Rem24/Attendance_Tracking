@@ -31,4 +31,12 @@ public class Employee
     public String familyKana;
     @ColumnInfo(name = "fixed_time")
     public String fixedTime;
+
+    public Employee() {}
+    public Employee(int __id) { id = __id; }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getId() { return id; }
 }

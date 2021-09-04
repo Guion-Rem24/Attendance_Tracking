@@ -2,6 +2,7 @@ package com.example.attendance_tracking.Model;
 
 import android.app.Application;
 import android.content.ContentResolver;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -38,5 +39,16 @@ public class EmployeeRepository {
 
     private void inputName(Employee it) {
         allNamesMap.put(it, it.familyName + " " + it.firstName);
+    }
+    public void insert(Employee e){ new insertAsyncTask(mDao).execute(e); }
+
+    private static class insertAsyncTask extends AsyncTask<Employee, Void, Void> {
+        private EmployeeDao dao;
+        insertAsyncTask(EmployeeDao Dao){ dao = Dao; }
+        @Override
+        protected Void doInBackground(Employee... params) {
+            dao.insert(params[0]);
+            return null;
+        }
     }
 }
