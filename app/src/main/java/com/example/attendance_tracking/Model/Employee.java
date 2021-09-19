@@ -1,14 +1,9 @@
 package com.example.attendance_tracking.Model;
 
-import android.view.ViewDebug;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Fts4;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-import java.util.Vector;
 
 //@Fts4
 @Entity(tableName = "employee_table",
@@ -31,6 +26,8 @@ public class Employee
     public String familyKana;
     @ColumnInfo(name = "fixed_time")
     public String fixedTime;
+    @ColumnInfo(name = "assigned")
+    public boolean fulltime;
 
     public Employee() {}
     public Employee(int __id) { id = __id; }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RadioButton;
@@ -18,10 +17,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.attendance_tracking.Model.Employee;
 import com.example.attendance_tracking.R;
 
 import com.example.attendance_tracking.View.NewEmployeeFragment.OnNewEmployeeFragmentInteractionListener;
@@ -45,13 +44,15 @@ public class EditEmployeeActivity
     private ViewPagerAdapter pagerAdapter;
     private InputMethodManager inputMethodManager;
 
+    public Employee employee = null;
+
     private FloatingActionButton addButton;
 
     private static EmployeeHomeFragment homeEmployeeFragment;
     private static EditEmployeeFragment editEmployeeFragment;
     private static NewEmployeeFragment newEmployeeFragment;
 
-    static int employeeAsigned;
+    public int employeeAssigned = -1;
 
     int mMode;
 
@@ -93,9 +94,25 @@ public class EditEmployeeActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.v(TAG, "---- move HOME ----");
-            finish();
-            return true;
+            Log.d(TAG, "[onBackPressed] on Toolbar");
+
+            switch(viewPager.getCurrentItem()){
+                case FragNum.HomeEmployee:
+                    Log.d(TAG, " -- from HomeEmployee");
+                    finish();
+                    break;
+                case FragNum.NewEmployee:
+                    Log.d(TAG, " -- from NewEmployee");
+                    viewPager.setCurrentItem(FragNum.HomeEmployee, false);
+                    break;
+                case FragNum.EditEmployee:
+                    Log.d(TAG, " -- from EditEmployee");
+                    viewPager.setCurrentItem(FragNum.HomeEmployee, false);
+                    break;
+                default:
+                    finish();
+            }
+            return super.onOptionsItemSelected(item);
         }
 
         switch(id){
@@ -197,6 +214,7 @@ public class EditEmployeeActivity
 
     @Override
     public void onBackPressed(){
+        Log.d(TAG, "[onBackPressed]");
         int current = viewPager.getCurrentItem();
         switch (current){
             case FragNum.EditEmployee:
@@ -217,7 +235,7 @@ public class EditEmployeeActivity
         switch(view.getId()){
             case R.id.radio_fulltime:
             case R.id.radio_parttime:
-                employeeAsigned = view.getId();
+                employeeAssigned = view.getId();
                 break;
         }
     }

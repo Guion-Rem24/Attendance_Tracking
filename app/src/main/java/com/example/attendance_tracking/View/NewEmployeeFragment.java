@@ -127,6 +127,25 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "clicked save button");
+                String[] reasons = new String[1];
+                if(existsBlank(reasons)){
+                    new AlertDialog.Builder(parent)
+                            .setTitle("未入力箇所があります")
+                            .setMessage(reasons[0])
+                            .setPositiveButton("閉じる", null)
+                            .show();
+
+                    return;
+                }
+                if(parent.employeeAssigned < 0){
+                    new AlertDialog.Builder(parent)
+                            .setIcon(R.drawable.announce)
+                            .setMessage("正社員，アルバイトどちらか選択してください")
+                            .setTitle("未入力箇所があります")
+                            .setPositiveButton("閉じる", null)
+                            .show();
+                    return;
+                }
                 new AlertDialog.Builder(parent)
                         .setIcon(R.drawable.question)
                         .setTitle("確認")
@@ -135,7 +154,7 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
                             @Override
                             public void onClick(DialogInterface dialog, int which){
                                 saveInformation();
-                                viewPager.setCurrentItem(2, false);
+                                viewPager.setCurrentItem(EditEmployeeActivity.FragNum.HomeEmployee, false);
                             }
                         })
                         .setNegativeButton("いいえ", null)
@@ -143,6 +162,35 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
             }
         });
     }
+
+    private boolean existsBlank(String[] reason_){
+        boolean exists = false;
+
+        String reason = "以下の箇所を入力してください．\n";
+        if(Objects.requireNonNull(familyNameEdit.getText()).toString().matches("")){
+            reason += "* 姓（漢字）\n";
+        }
+        if(Objects.requireNonNull(familyKanaEdit.getText()).toString().matches("")){
+            reason += "* 姓（カナ）\n";
+        }
+        if(Objects.requireNonNull(firstNameEdit.getText()).toString().matches("")){
+            reason += "* 名（漢字) \n";
+        }
+        if(Objects.requireNonNull(firstKanaEdit.getText()).toString().matches("")){
+            reason += "* 名（カナ）\n";
+        }
+        if(Objects.requireNonNull(employeeIdEdit.getText()).toString().matches("")){
+            reason += "* 従業員番号 \n";
+        }
+        reason_[0] = reason;
+        if(!reason.matches("以下の箇所を入力してください．\n")){
+            exists = true;
+        }
+
+        return exists;
+
+    }
+
 
     private void saveInformation(){
         Employee employee = new Employee();
@@ -152,6 +200,16 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
         employee.firstKana = Objects.requireNonNull(firstKanaEdit.getText()).toString();
         int id = Integer.parseInt(Objects.requireNonNull(employeeIdEdit.getText()).toString());
         employee.setId(id);
+        int view_id = parent.employeeAssigned;
+        switch(view_id){
+            case R.id.radio_fulltime:
+                employee.fulltime = true;
+                break;
+            case R.id.radio_parttime:
+                employee.fulltime = false;
+                break;
+        }
+        parent.employeeAssigned = -1;
         viewModel.insert(employee);
     }
 

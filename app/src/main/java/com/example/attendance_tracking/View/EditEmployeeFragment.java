@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -25,7 +26,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-public class EditEmployeeFragment extends Fragment implements OnBackKeyPressedListener {
+// TODO: create editing window
+public class EditEmployeeFragment extends Fragment
+        implements OnBackKeyPressedListener
+{
 
 
     private static final String TAG = "NewEmployeeFragment";
@@ -39,6 +43,9 @@ public class EditEmployeeFragment extends Fragment implements OnBackKeyPressedLi
     private FloatingActionButton addButton;
     private RecyclerView recyclerView;
     private EmployeeListAdapter adapter;
+    private Employee employee;
+
+    private OnBackPressedCallback backPressedCallback;
 
     public static EditEmployeeFragment newInstance(){ return new EditEmployeeFragment(); }
 
@@ -75,8 +82,19 @@ public class EditEmployeeFragment extends Fragment implements OnBackKeyPressedLi
 
     @Override
     public void onAttach(@NonNull Context context){
+        Log.d(TAG, "[onAttach]");
         super.onAttach(context);
         onAttachContext(context);
+//        backPressedCallback = new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                Log.d(TAG, "[handleOnBackPressed]");
+//                showDialog();
+//                parent.getViewPager().setCurrentItem(EditEmployeeActivity.FragNum.HomeEmployee,false);
+//            }
+//        };
+//        requireActivity().getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
+
     }
 
     protected void onAttachContext(Context context){
@@ -108,16 +126,25 @@ public class EditEmployeeFragment extends Fragment implements OnBackKeyPressedLi
     public void onResume(){
         super.onResume();
         Log.d(TAG, "[onResume]");
+        this.employee = parent.employee;
+        parent.employee = null;
     }
 
     @Override
     public void onBackPressed() {
 //        parent.onResume();
+        Log.d(TAG, "[onBackPressed]");
+        parent.getViewPager().setCurrentItem(EditEmployeeActivity.FragNum.HomeEmployee);
 
     }
     private void setListeners(){
 
     }
+
+    private void showDialog(){
+
+    }
+
 
     public interface OnEditEmployeeFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);

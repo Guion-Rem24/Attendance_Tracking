@@ -13,7 +13,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
-@Database(entities = {Employee.class}, version = 1, exportSchema = false)
+@Database(entities = {Employee.class}, version = 2, exportSchema = false)
 public abstract class EmployeeRoomDatabase extends RoomDatabase {
     final static private String TAG = "EmployeeRoomDatabase";
     public abstract EmployeeDao employeeDao();
