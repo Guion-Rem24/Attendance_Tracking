@@ -3,9 +3,11 @@ package com.example.attendance_tracking.utils;
 /**
  * 参考
  * https://codeburst.io/android-swipe-menu-with-recyclerview-8f28a235ff28
+ * https://beightlyouch.com/blog/programming/recycler-view-swipe-delete/
  */
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,8 +31,10 @@ import static androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE;
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
 
+import com.example.attendance_tracking.R;
 import com.example.attendance_tracking.View.EditEmployeeActivity;
 import com.example.attendance_tracking.View.EmployeeListAdapter;
+import com.example.attendance_tracking.View.EmployeeSearchView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,90 +77,94 @@ public abstract class SwipeController extends ItemTouchHelper.Callback {
     private int over_center = 1;
     private boolean overCenter = false;
 
-    private Map<Integer, List<BehindButton>> buttonBuffer;
-    private List<BehindButton> buttons;
-    private GestureDetector gestureDetector;
+    private EmployeeListAdapter.OnItemClickListener itemClickListener;
+    private EmployeeListAdapter.OnDeleteButtonsClickListener deleteButtonsClickListener;
+
 
 //    public SwipeController(ButtonsClickListener listener){
 //        this.clickedListener = listener;
 //    }
+    private void setListeners(){
+        EmployeeListAdapter adapter = (EmployeeListAdapter) view.getAdapter();
+        if(adapter == null) throw new NullPointerException("Adapter is Null Pointer");
+        adapter.setOnItemClickListener(itemClickListener);
+        adapter.setOnDeleteButtonsClickListener(deleteButtonsClickListener);
+    }
+
 
     public SwipeController(Context context, RecyclerView recyclerView){
         pointer = this;
-        buttonBuffer = new HashMap<>();
-        buttons = new ArrayList<>();
+
         mContext = context;
-        gestureDetector = new GestureDetector(context, gestureListener);
+
         view = recyclerView;
-        if(view.getAdapter() == null){
-            throw new NullPointerException(view.getClass().getName()+" has no Adapter");
+        if(view.getAdapter() == null) {
+            throw new NullPointerException(view.getClass().getName() + " has no Adapter");
         }
 
-        ((EmployeeListAdapter)view.getAdapter()).setOnItemClickListener(new EmployeeListAdapter.OnItemClickListener() {
+        itemClickListener = new EmployeeListAdapter.OnItemClickListener() {
             @Override
             public void onClick(EmployeeListAdapter.EmployeeViewHolder viewHolder) {
                 Log.d(TAG, "[onClick] : viewHolder");
+                int pos = viewHolder.getAdapterPosition();
                 if(Hanged){
-                    int pos = viewHolder.getAdapterPosition();
                     view.getAdapter().notifyItemChanged(pos);
                     Hanged = swipeBack = false;
                     buttonShowedState = ButtonsState.GONE;
                 }
                 else{
-                    String name = (String) ((EmployeeListAdapter.EmployeeViewHolder)viewHolder).employeeName.getText();
+                    String name = (String) viewHolder.employeeName.getText();
                     Log.d(TAG, name);
-                    ((EditEmployeeActivity)mContext).employee = ((EmployeeListAdapter.EmployeeViewHolder)viewHolder).get();
+//                    ((EditEmployeeActivity)mContext).employee = viewHolder.get();
+                    ((EditEmployeeActivity)mContext).employee = ((EmployeeListAdapter)view.getAdapter()).getEmployee(pos);
                     ((EditEmployeeActivity)mContext).getViewPager().setCurrentItem(EditEmployeeActivity.FragNum.EditEmployee,false);
                 }
             }
-        });
+        };
+        deleteButtonsClickListener = new EmployeeListAdapter.OnDeleteButtonsClickListener() {
+            @Override
+            public void onClick(EmployeeListAdapter.EmployeeViewHolder viewHolder) {
+                Log.d(TAG, "[onClick] delete button: " + view.getClass().getName());
+                int pos = viewHolder.getAdapterPosition();
+                EmployeeListAdapter adapter = (EmployeeListAdapter) view.getAdapter();
+                new AlertDialog.Builder(context)
+                        .setIcon(R.drawable.ic_baseline_warning_24)
+                        .setTitle("確認")
+                        .setMessage("従業員データが完全に削除されます．")
+                        .setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(context instanceof EditEmployeeActivity){
+                                    ((EditEmployeeActivity) context).getHomeFragment()
+                                            .requestRemoveEmployee(adapter.getEmployee(pos));
+                                }
+                                adapter.remove(pos);
+                            }
+                        })
+                        .setNegativeButton("いいえ", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                view.getAdapter().notifyItemChanged(pos);
+                                swipeBack = Hanged = false;
+                                buttonShowedState = ButtonsState.GONE;
+                            }
+                        })
+                        .show();
+            }
+
+        };
+        setListeners();
 
     }
 
     static public SwipeController getPointer() { return pointer; }
 
-    private final GestureDetector.SimpleOnGestureListener gestureListener = new GestureDetector.SimpleOnGestureListener(){
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.d(TAG, "[onSingleTapConfirmed]");
-            for (BehindButton button : buttons){
-                if(button.onClick(e.getX(), e.getY()))
-                    break;
-            }
-            return true;
-        }
-    };
-
     @Override
     public int getMovementFlags(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder) {
         Log.d(TAG, "[getMovementFlags]");
-        if(currentViewHolder!=null && currentViewHolder!=viewHolder){
-            setInit();
-        }
         view = recyclerView;
+//        setListeners();
 
-        List<BehindButton> buffer = new ArrayList<>();
-        int pos = viewHolder.getAdapterPosition();
-        if(!buttonBuffer.containsKey(pos)){
-            instantiateBehindButton((EmployeeListAdapter.EmployeeViewHolder) viewHolder, buffer);
-            buttonBuffer.put(pos,buffer);
-        }
-        buttons = buttonBuffer.get(pos);
-
-
-
-
-//        Log.d(TAG, "RecyclerView: "+recyclerView.getParent().getClass().getName());
-//        if(recyclerView.getParent() instanceof LinearLayout) {
-//            parent = (LinearLayout)recyclerView.getParent();
-//        }
-//        else{
-//            try {
-//                throw new InstantiationException();
-//            } catch (InstantiationException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         switch(buttonShowedState){
             case LEFT_VISIBLE:
@@ -204,7 +213,16 @@ public abstract class SwipeController extends ItemTouchHelper.Callback {
                             @NonNull RecyclerView.ViewHolder viewHolder,
                             float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
-
+//        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        setListeners();
+        if(currentViewHolder!=null && currentViewHolder != viewHolder){
+            getDefaultUIUtil().onDraw(c,recyclerView,
+                    ((EmployeeListAdapter.EmployeeViewHolder)currentViewHolder).foreground,
+                    0,0,actionState,isCurrentlyActive);
+            Hanged = swipeBack = false;
+            buttonShowedState = ButtonsState.GONE;
+        }
+        currentViewHolder = (EmployeeListAdapter.EmployeeViewHolder) viewHolder;
         float ad = 0;
         float pre_dX = 0;
         if (viewHolder instanceof EmployeeListAdapter.EmployeeViewHolder) {
@@ -217,16 +235,12 @@ public abstract class SwipeController extends ItemTouchHelper.Callback {
                 e.printStackTrace();
             }
         }
-        int pos = viewHolder.getAdapterPosition();
-        List<BehindButton> buffer = buttonBuffer.get(pos);
 
         if(actionState == ACTION_STATE_IDLE){
             Log.d(TAG, "ACTION_STATE_IDLE");
         }
 
         if(actionState == ACTION_STATE_SWIPE){
-//            Log.d(TAG, "ACTION_STATE_SWIPE");
-//            Log.d(TAG, "[dX,dY] ["+dX+","+dY+"] "+(moved?"moved":"")+(Hanged ? " Hanged":"")+(swipeBack?" swipeBack":""));
             Log.d(TAG, "[dX,dY] ["+dX+","+dY+"] "+(Hanged ? " Hanged ":"")+(buttonShowedState==ButtonsState.GONE?"GONE ":(buttonShowedState==ButtonsState.LEFT_VISIBLE?"LEFT":"RIGHT")));
             pre_dX = dX;
             if (buttonShowedState != ButtonsState.GONE) {
@@ -257,19 +271,29 @@ public abstract class SwipeController extends ItemTouchHelper.Callback {
                     else                dX = dX+ad;
                 }
 
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                getDefaultUIUtil().onDraw(c,recyclerView,((EmployeeListAdapter.EmployeeViewHolder)viewHolder).foreground,
+                        dX,dY,actionState,isCurrentlyActive);
             }
-
-            Log.d(TAG, "setTouchListener");
 
         }
         if (buttonShowedState == ButtonsState.GONE) {
             if(swipeBack){
 //                pos = viewHolder.getAdapterPosition();
-                recyclerView.getAdapter().notifyItemChanged(pos);
+//                recyclerView.getAdapter().notifyItemChanged(pos);
+                getDefaultUIUtil().onDraw(c,recyclerView,((EmployeeListAdapter.EmployeeViewHolder)viewHolder).foreground,
+                        0,0,actionState,isCurrentlyActive);
             }
-            else super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            else {
+//                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                getDefaultUIUtil().onDraw(c,recyclerView,((EmployeeListAdapter.EmployeeViewHolder)viewHolder).foreground,
+                        dX,dY,actionState,isCurrentlyActive);
+            }
         }
+
+        getDefaultUIUtil().onDraw(c,recyclerView,
+                ((EmployeeListAdapter.EmployeeViewHolder)viewHolder).background,
+                0,0,actionState,isCurrentlyActive);
 
         if(!moved && pre_dX==0) {
             swipeBack = Hanged;
@@ -281,7 +305,7 @@ public abstract class SwipeController extends ItemTouchHelper.Callback {
 
 //        setOnButtons(null, currentViewHolder.deleteButton);
 
-        drawBehindButtons(c, (EmployeeListAdapter.EmployeeViewHolder) viewHolder, Objects.requireNonNull(buffer), pos, dX);
+//        drawBehindButtons(c, (EmployeeListAdapter.EmployeeViewHolder) viewHolder, Objects.requireNonNull(buffer), pos, dX);
 //        drawButtons(c, viewHolder);
         setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         swiped = false;
@@ -367,14 +391,14 @@ public abstract class SwipeController extends ItemTouchHelper.Callback {
         recyclerView.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(buttonShowedState != ButtonsState.GONE) gestureDetector.onTouchEvent(event);
-                int pos = viewHolder.getAdapterPosition();
-                List<BehindButton> buffer = buttonBuffer.get(pos);
-                if(buffer != null && !moved) {
-                    Log.d(TAG, "[onDraw]");
-                    drawBehindButtons(c, (EmployeeListAdapter.EmployeeViewHolder) viewHolder, buffer, pos, 0);
-                    SwipeController.super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                }
+
+//                int pos = viewHolder.getAdapterPosition();
+//                List<BehindButton> buffer = buttonBuffer.get(pos);
+//                if(buffer != null && !moved) {
+//                    Log.d(TAG, "[onDraw]");
+//                    drawBehindButtons(c, (EmployeeListAdapter.EmployeeViewHolder) viewHolder, buffer, pos, 0);
+//                    SwipeController.super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+//                }
 
                 switch(event.getAction()){
                     case MotionEvent.ACTION_DOWN:
@@ -429,7 +453,10 @@ public abstract class SwipeController extends ItemTouchHelper.Callback {
                             if(Hanged && dX>-buttonWidth) { Hanged = false; buttonShowedState = ButtonsState.GONE; }
                         }
 
-                        if(buttonShowedState == ButtonsState.GONE) over_center = 1;
+                        if(buttonShowedState == ButtonsState.GONE) {
+                            Hanged = false;
+                            over_center = 1;
+                        }
 
 //                        if(buttonShowedState != ButtonsState.GONE)
 //                            drawBehindButtons(c, (EmployeeListAdapter.EmployeeViewHolder) viewHolder, buffer, pos, 0);

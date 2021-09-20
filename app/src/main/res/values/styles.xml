@@ -12,6 +12,10 @@
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/colorPrimary</item>
     </style>
+<!--    <style name="Widget.MyTheme.MyView" parent="">-->
+<!--        <item name="android:background">@color/gray_400</item>-->
+<!--        <item name="exampleColor">@color/light_blue_400</item>-->
+<!--    </style>-->
 <!--    <style name="MyTheme.NoActionBar">-->
 <!--        &lt;!&ndash; Both of these are needed &ndash;&gt;-->
 <!--        <item name="windowActionBar">false</item>-->

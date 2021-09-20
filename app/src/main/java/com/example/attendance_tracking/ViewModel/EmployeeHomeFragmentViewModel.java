@@ -25,6 +25,8 @@ public class EmployeeHomeFragmentViewModel extends AndroidViewModel {
         mAllEmployees = repo.allEmployees;
     }
 
+    public void deleteEmployee(Employee employee){ repo.delete(employee); }
+
     public LiveData<List<Employee>>
     getAllEmployees(){
         return repo.getAllEmployees();

@@ -2,6 +2,7 @@ package com.example.attendance_tracking.Model;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -17,6 +18,11 @@ public abstract class EmployeeDao {
 
     @Query("DELETE FROM employee_table")
     public abstract void delete();
+
+//    @Query("DELETE FROM employee_table WHERE id = employee.id")
+//    public abstract void delete(Employee employee);
+    @Delete
+    public abstract void delete(Employee employee);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insert (Employee employee);

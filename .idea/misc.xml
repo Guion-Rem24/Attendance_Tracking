@@ -3,10 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.335" />
+        <entry key="../../Library/Android/sdk/platforms/android-30/data/res/layout/simple_spinner_item.xml" value="0.14947916666666666" />
         <entry key="app/src/main/res/layout/activity_edit_employee.xml" value="0.12228260869565218" />
         <entry key="app/src/main/res/layout/button_delete_item.xml" value="0.17753623188405798" />
-        <entry key="app/src/main/res/layout/fragment_employee_home.xml" value="0.15" />
-        <entry key="app/src/main/res/layout/recyclerview_employee.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_employee_home.xml" value="0.22155724427712298" />
+        <entry key="app/src/main/res/layout/fragment_new_employee.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/menu_search_employee.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/recyclerview_employee.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/sample_employee_search_view.xml" value="0.140625" />
+        <entry key="app/src/main/res/layout/view_employee_search.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/drawer.xml" value="0.26130005162504605" />
+        <entry key="app/src/main/res/menu/main.xml" value="0.15" />
+        <entry key="app/src/main/res/menu/options.xml" value="0.2886272212191163" />
+        <entry key="app/src/main/res/menu/sample_drawer.xml" value="0.15" />
       </map>
     </option>
   </component>

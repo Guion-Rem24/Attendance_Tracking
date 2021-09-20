@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -26,6 +27,31 @@
 <!--        android:gravity="center"-->
 <!--        android:src="@drawable/delete_outline" />-->
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/background_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:paddingBottom="3sp">
+        <ImageButton
+            android:id="@+id/button_delete_left"
+            android:layout_width="290px"
+            android:layout_height="match_parent"
+            android:src="@drawable/delete_outline"
+            android:gravity="center"
+            android:background="@color/delete"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <ImageButton
+            android:id="@+id/button_delete_right"
+            android:layout_width="290px"
+            android:layout_height="match_parent"
+            android:src="@drawable/delete_outline"
+            android:gravity="center"
+            android:background="@color/delete"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/item_employee_base"
@@ -58,4 +84,4 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

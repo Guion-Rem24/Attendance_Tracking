@@ -41,6 +41,7 @@ public class EmployeeRepository {
         allNamesMap.put(it, it.familyName + " " + it.firstName);
     }
     public void insert(Employee e){ new insertAsyncTask(mDao).execute(e); }
+    public void delete(Employee e){ new deleteAsyncTask(mDao).execute(e); }
 
     private static class insertAsyncTask extends AsyncTask<Employee, Void, Void> {
         private EmployeeDao dao;
@@ -48,6 +49,15 @@ public class EmployeeRepository {
         @Override
         protected Void doInBackground(Employee... params) {
             dao.insert(params[0]);
+            return null;
+        }
+    }
+    private static class deleteAsyncTask extends AsyncTask<Employee, Void, Void>{
+        private EmployeeDao dao;
+        deleteAsyncTask(EmployeeDao Dao){ dao = Dao; }
+        @Override
+        protected Void doInBackground(Employee... params) {
+            dao.delete(params[0]);
             return null;
         }
     }

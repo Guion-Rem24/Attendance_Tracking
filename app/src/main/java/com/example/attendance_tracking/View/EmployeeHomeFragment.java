@@ -7,12 +7,18 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,6 +34,7 @@ import com.example.attendance_tracking.utils.SwipeController;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.Objects;
 
 import kotlin.Suppress;
 
@@ -44,6 +51,7 @@ public class EmployeeHomeFragment extends Fragment {
     private List<Employee> employees;
     private SwipeController swipeController;
     private ItemTouchHelper touchHelper;
+    private EmployeeSearchView employeeSearchView;
 
     private FloatingActionButton addButton;
 
@@ -91,12 +99,39 @@ public class EmployeeHomeFragment extends Fragment {
             public void onChanged(List<Employee> employee) {
                 Log.d(TAG, "[onChanged] employees");
                 employees = employee;
-                adapter.setEmployees(employee);
+                ((EmployeeListAdapter) Objects.requireNonNull(recyclerView.getAdapter())).setEmployees(employee);
+                employeeSearchView.setEmployees(employee);
             }
         });
 
         return base;
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "[onPause]");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(recyclerView.getAdapter() == null) throw new NullPointerException();
+                int num = recyclerView.getAdapter().getItemCount();
+                for(int i=0;i<num;++i){
+                    recyclerView.getAdapter().notifyItemChanged(i);
+                }
+            }
+        }).start();
+        super.onPause();
+    }
+
+    public void requestRemoveEmployee(Employee employee){
+        viewModel.deleteEmployee(employee);
+    }
+
 
     public void findViews(){
         addButton = base.findViewById(R.id.button_addEmployee);
@@ -121,6 +156,7 @@ public class EmployeeHomeFragment extends Fragment {
                     @Override
                     public void onClick(EmployeeListAdapter.EmployeeViewHolder viewHolder, int position) {
                         Log.d("BehindButton", "[onClick]");
+
                     }
                 }));
                 behindButtons.add(new BehindButton(recyclerView, viewHolder, new BehindButtonClickListener() {
@@ -132,6 +168,8 @@ public class EmployeeHomeFragment extends Fragment {
             }
         };
         touchHelper = new ItemTouchHelper(swipeController);
+        employeeSearchView = base.findViewById(R.id.search_view_employee);
+        employeeSearchView.setRecyclerView(recyclerView);
 
     }
 

@@ -5,12 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -41,6 +45,7 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
     private TextInputEditText firstKanaEdit;
     private TextInputEditText employeeIdEdit;
     private FloatingActionButton saveButton;
+    private RadioButton fulltime, parttime;
 
     private NewEmployeeFragmentViewModel viewModel;
 
@@ -120,6 +125,8 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
         firstNameEdit = base.findViewById(R.id.input_firstname_text);
         firstKanaEdit = base.findViewById(R.id.input_firstkana_text);
         employeeIdEdit = base.findViewById(R.id.input_employeeid_text);
+        fulltime = base.findViewById(R.id.radio_fulltime);
+        parttime = base.findViewById(R.id.radio_parttime);
     }
 
     private void setListeners(){
@@ -159,6 +166,54 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
                         })
                         .setNegativeButton("いいえ", null)
                         .show();
+            }
+        });
+        familyNameEdit.addTextChangedListener(new TextWatcher() {
+            String str = null;
+            int before_length = 0;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d(TAG,"[beforeTextChanged]: "+s.toString());
+                before_length = s.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(isHiragana(s) && before_length<=s.length()){
+                    str = convert(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(str!=null){
+                    familyKanaEdit.setText(str);
+                    str = null;
+                }
+            }
+        });
+        firstNameEdit.addTextChangedListener(new TextWatcher() {
+            String str = null;
+            int before_length = 0;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d(TAG,"[beforeTextChanged]: "+s.toString());
+                before_length = s.length();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(isHiragana(s) && before_length<=s.length()){
+                    str = convert(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(str!=null){
+                    firstKanaEdit.setText(str);
+                    str = null;
+                }
             }
         });
     }
@@ -211,6 +266,7 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
         }
         parent.employeeAssigned = -1;
         viewModel.insert(employee);
+        clear();
     }
 
     @Override
@@ -227,5 +283,37 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
 
     public interface OnNewEmployeeFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void clear(){
+        familyNameEdit.setText("");
+        firstNameEdit.setText("");
+        familyKanaEdit.setText("");
+        firstKanaEdit.setText("");
+        employeeIdEdit.setText("");
+        fulltime.setChecked(false);
+        parttime.setChecked(false);
+    }
+
+    // convert Hiragana to Katakana
+    static private String convert(String old){
+        StringBuilder buffer = new StringBuilder();
+        for(int i=0;i<old.length();++i){
+            char c = old.charAt(i);
+            if ((c >= 0x3041) && (c <= 0x3093)) {
+                Log.d(TAG, "カナ "+c);
+                buffer.append((char) (c + 0x60));
+            }
+            else {
+                buffer.append(c);
+            }
+        }
+        return buffer.toString();
+    }
+
+    static private boolean isHiragana(CharSequence c){
+
+        return c.toString().matches("^[\\u3040-\\u309F]+$");
+
     }
 }

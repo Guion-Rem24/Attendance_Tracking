@@ -32,7 +32,7 @@ public class EditEmployeeFragment extends Fragment
 {
 
 
-    private static final String TAG = "NewEmployeeFragment";
+    private static final String TAG = "EditEmployeeFragment";
     private EditEmployeeViewModel viewModel;
 //    private NewEmployeeFragment.OnEmployeeFragmentInteractionListener interactionListener;
     private EditEmployeeActivity parent;

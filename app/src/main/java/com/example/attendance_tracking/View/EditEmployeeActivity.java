@@ -5,14 +5,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -25,7 +32,11 @@ import com.example.attendance_tracking.R;
 
 import com.example.attendance_tracking.View.NewEmployeeFragment.OnNewEmployeeFragmentInteractionListener;
 import com.example.attendance_tracking.View.EditEmployeeFragment.OnEditEmployeeFragmentInteractionListener;
+import com.example.attendance_tracking.ViewModel.EmployeeHomeFragmentViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class EditEmployeeActivity
@@ -51,6 +62,8 @@ public class EditEmployeeActivity
     private static EmployeeHomeFragment homeEmployeeFragment;
     private static EditEmployeeFragment editEmployeeFragment;
     private static NewEmployeeFragment newEmployeeFragment;
+
+    private List<MenuItem> options;
 
     public int employeeAssigned = -1;
 
@@ -140,9 +153,68 @@ public class EditEmployeeActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.main, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+//        inflater.inflate(R.menu.menu_search_employee,menu);
+//        MenuItem menuItem = menu.findItem(R.id.item_search_employee);
+//
+//        EmployeeSearchView employeeSearchView = (EmployeeSearchView) menuItem.getActionView();
+//        employeeSearchView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                employeeSearchView.requestFocus();
+//                setOptionsVisibility(false);
+//            }
+//        });
+//        employeeSearchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if(!hasFocus){
+//                    setOptionsVisibility(true);
+//                }
+//            }
+//        });
+//        SearchView searchView = employeeSearchView.searchView;
+
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                Log.d(TAG, "[onQueryTextSubmit] query: "+query);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                Log.d(TAG, "[onQueryTextChange]: "+newText);
+//                return false;
+//            }
+//        });
+//        searchView.setFocusable(true);
+//        searchView.setOnSearchClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "[onSearchClick] searchView");
+//
+//            }
+//        });
+//
+//        searchView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                Log.d(TAG, "[onFocusChanged] searchView");
+//            }
+//        });
+
+
+
 
         return true;
+    }
+
+    private void setOptionsVisibility(boolean visibility){
+        for(MenuItem item: options){
+            item.setVisible(visibility);
+        }
     }
 
     private void findViews(){
@@ -227,6 +299,7 @@ public class EditEmployeeActivity
         }
     }
 
+    public EmployeeHomeFragment getHomeFragment(){ return homeEmployeeFragment; }
 
     // For EditEmployeeFragment
     // TODO: How to implement on EditEmployeeFragment?
