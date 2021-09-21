@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -33,22 +34,25 @@ import com.example.attendance_tracking.R;
 import com.example.attendance_tracking.View.NewEmployeeFragment.OnNewEmployeeFragmentInteractionListener;
 import com.example.attendance_tracking.View.EditEmployeeFragment.OnEditEmployeeFragmentInteractionListener;
 import com.example.attendance_tracking.ViewModel.EmployeeHomeFragmentViewModel;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class EditEmployeeActivity
         extends AppCompatActivity
         implements OnNewEmployeeFragmentInteractionListener,
-                   OnEditEmployeeFragmentInteractionListener
+                   OnEditEmployeeFragmentInteractionListener,
+                   View.OnTouchListener
 {
 
     private final String TAG = "EditEmployeeActivity";
 
     private Toolbar toolbar;
-    private ConstraintLayout root;
+    private View root;
 
 
     private ViewPager2 viewPager;
@@ -93,12 +97,15 @@ public class EditEmployeeActivity
         viewPager.setAdapter(pagerAdapter);
         viewPager.setUserInputEnabled(false); // forbid to swipe
         viewPager.setCurrentItem(FragNum.HomeEmployee, false);
-        viewPager.setOnTouchListener(newEmployeeFragment);
+        viewPager.setOnTouchListener(this/*newEmployeeFragment*/);
 
         // ToolBar
         toolbar.setTitle("従業員の編集");
+//        CollapsingToolbarLayout toolbarLayout = findViewById(R.id.toolbar_layout);
+//        toolbarLayout.setTitleEnabled(false);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
     }
@@ -219,9 +226,11 @@ public class EditEmployeeActivity
 
     private void findViews(){
         root = findViewById(R.id.layout_editemployee_root);
+
         pagerAdapter = new ViewPagerAdapter(this);
         viewPager = findViewById(R.id.viewPager_editEmployee);
         toolbar = findViewById(R.id.toolbar_editEmployee);
+        inputMethodManager = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
     }
     private void setListeners(){
 
@@ -312,4 +321,23 @@ public class EditEmployeeActivity
                 break;
         }
     }
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        Log.d(TAG, "touched");
+//        root.performClick();
+        // FIXME: not Focused to base Window
+        // hide keyboard when touching background
+        View currentView = getCurrentFocus();
+        if(currentView != null){
+            inputMethodManager.hideSoftInputFromWindow(currentView.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+            currentView.requestFocus();
+        }
+        return true;
+    }
+
+
 }

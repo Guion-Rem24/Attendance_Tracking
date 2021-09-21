@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <include
+        android:id="@+id/layout_monday"
+        layout="@layout/layout_day_worktime"
+        android:layout_width="match_parent"
+        android:layout_height="60sp" />
+    <include
+        android:id="@+id/layout_tuesday"
+        layout="@layout/layout_day_worktime"
+        android:layout_width="match_parent"
+        android:layout_height="60sp" />
+    <include
+        android:id="@+id/layout_wednesday"
+        layout="@layout/layout_day_worktime"
+        android:layout_width="match_parent"
+        android:layout_height="60sp" />
+    <include
+        android:id="@+id/layout_thursday"
+        layout="@layout/layout_day_worktime"
+        android:layout_width="match_parent"
+        android:layout_height="60sp" />
+    <include
+        android:id="@+id/layout_friday"
+        layout="@layout/layout_day_worktime"
+        android:layout_width="match_parent"
+        android:layout_height="60sp" />
+    <include
+        android:id="@+id/layout_saturday"
+        layout="@layout/layout_day_worktime"
+        android:layout_width="match_parent"
+        android:layout_height="60sp" />
+    <include
+        android:id="@+id/layout_sunday"
+        layout="@layout/layout_day_worktime"
+        android:layout_width="match_parent"
+        android:layout_height="60sp" />
+
+
+</LinearLayout>

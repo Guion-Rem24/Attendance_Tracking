@@ -10,8 +10,21 @@
     <color name="delete">#B5FF1E1E</color>
 
     <!-- added by NavigationBar created -->
+    <color name="colorPrimaryLight2">#B3D2B1</color>
+    <color name="colorPrimaryLight">#96FF9B</color>
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorPrimaryDark">#388E3C</color>
+    <color name="colorPrimaryDark2">#0B6D01</color>
+    <color name="colorPastelLight">#FFC78F</color>
+    <color name="colorPastel">#FFA64C</color>
+    <color name="colorPastelDark">#E98825</color>
+    <color name="colorComplementaryLight">#E06066</color>
+    <color name="colorComplementary">#C13A41</color>
+    <color name="colorComplementaryDark">#A21E25</color>
+    <color name="colorOceanLight">#A3DAEA</color>
+    <color name="colorOcean">#75C0D5</color>
+    <color name="colorOceanDark">#4DA1B9</color>
+
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorDrawerHeader">#CDDC39</color>

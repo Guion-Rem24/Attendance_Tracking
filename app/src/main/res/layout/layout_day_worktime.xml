@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60sp"
+    xmlns:attr="http://schemas.android.com/tools"
+
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/button_activate"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/ripple_background_primary"
+        android:layout_margin="5dp"
+        android:hint="Day"
+        android:text=""/>
+<!--    android:backgroundTint="@color/colorPrimaryLight2"-->
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <!--        <TimePicker-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:timePickerMode="spinner"-->
+            <!--            />-->
+            <!--        <TimePicker-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="match_parent"-->
+            <!--            android:timePickerMode="spinner"-->
+            <!--            />-->
+            <NumberPicker
+                android:id="@+id/picker_start_hour"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:overScrollMode="always"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:textSize="30dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"/>
+            <NumberPicker
+                android:id="@+id/picker_start_min"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="~"
+                android:layout_gravity="center_vertical"/>
+            <NumberPicker
+                android:id="@+id/picker_end_hour"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:textSize="30dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"/>
+            <NumberPicker
+                android:id="@+id/picker_end_min"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"/>
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/frame_covering"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_600"
+            android:alpha="0.5"
+            android:visibility="visible"/>
+    </FrameLayout>
+
+</LinearLayout>

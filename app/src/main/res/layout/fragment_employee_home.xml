@@ -34,9 +34,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_view_employee"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/gray_400"
         android:text="従業員一覧"
-        android:elevation="10dp"
+        android:textColor="@color/black"
+        android:elevation="20dp"
         android:textSize="20sp"/>
 
     <com.example.attendance_tracking.View.EmployeeSearchView
@@ -63,10 +64,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/colorPrimaryDark"
         android:theme="@style/MyTheme"
-        android:elevation="10dp"
-        app:srcCompat="@android:drawable/ic_input_add"
+        android:elevation="20dp"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:rippleColor="@color/colorPrimaryDark2"
+        app:srcCompat="@drawable/ic_add_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -1,22 +1,37 @@
 package com.example.attendance_tracking.View;
 
+import static java.util.Calendar.FRIDAY;
+import static java.util.Calendar.MONDAY;
+import static java.util.Calendar.SATURDAY;
+import static java.util.Calendar.SUNDAY;
+import static java.util.Calendar.THURSDAY;
+import static java.util.Calendar.TUESDAY;
+import static java.util.Calendar.WEDNESDAY;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RadioButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -25,12 +40,25 @@ import com.example.attendance_tracking.Model.Employee;
 import com.example.attendance_tracking.OnBackKeyPressedListener;
 import com.example.attendance_tracking.R;
 import com.example.attendance_tracking.ViewModel.NewEmployeeFragmentViewModel;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedListener, View.OnTouchListener {
+/*
+ TODO: 保存時fixedTimeの入力
+ TODO: 出勤時間が入力された時，退勤時間がそれよりも後になるようにListenerを設定
+
+*/
+
+public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedListener
+//        , View.OnTouchListener
+{
 
     private static final String TAG = "NewEmployeeFragment";
     private OnNewEmployeeFragmentInteractionListener interactionListener;
@@ -46,6 +74,12 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
     private TextInputEditText employeeIdEdit;
     private FloatingActionButton saveButton;
     private RadioButton fulltime, parttime;
+    private LinearLayout week_container;
+    private LinearLayout mondayLayout, tuesdayLayout, wednesdayLayout, thursdayLayout, fridayLayout, saturdayLayout, sundayLayout;
+    private Map<Integer, LinearLayout> weekLayouts;
+    private Map<LinearLayout, Button> activateButtons;
+    private List<Boolean> activated;
+    private Map<Integer, Pair<NumberPicker,NumberPicker>> hoursOf, minutesOf;
 
     private NewEmployeeFragmentViewModel viewModel;
 
@@ -68,7 +102,19 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
         base = inflater.inflate(R.layout.fragment_new_employee, container, false);
 
         findViews();
+        settings();
         setListeners();
+
+
+        // ToolBar
+//        Toolbar toolbar = base.findViewById(R.id.toolbar_editEmployee);
+//        toolbar.setTitle("従業員の編集");
+//        CollapsingToolbarLayout toolbarLayout = base.findViewById(R.id.toolbar_layout);
+//        toolbarLayout.setTitleEnabled(false);
+//        parent.setSupportActionBar(toolbar);
+//
+//        Objects.requireNonNull(parent.getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+//        setHasOptionsMenu(true);
 
         return base;
     }
@@ -103,11 +149,13 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
     public void onPause(){
         super.onPause();
         Log.d(TAG,"[onPause]");
+        clear();
     }
     @Override
     public void onResume(){
         super.onResume();
         Log.d(TAG, "[onResume]");
+        Log.d(TAG, getView().getClass().getName());
     }
 
     @Override
@@ -127,9 +175,111 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
         employeeIdEdit = base.findViewById(R.id.input_employeeid_text);
         fulltime = base.findViewById(R.id.radio_fulltime);
         parttime = base.findViewById(R.id.radio_parttime);
+        week_container = base.findViewById(R.id.layout_setting_week);
+        mondayLayout = week_container.findViewById(R.id.layout_monday);
+        tuesdayLayout = week_container.findViewById(R.id.layout_tuesday);
+        wednesdayLayout = week_container.findViewById(R.id.layout_wednesday);
+        thursdayLayout = week_container.findViewById(R.id.layout_thursday);
+        fridayLayout  = week_container.findViewById(R.id.layout_friday);
+        saturdayLayout = week_container.findViewById(R.id.layout_saturday);
+        sundayLayout = week_container.findViewById(R.id.layout_sunday);
+        weekLayouts = new HashMap<>();
+        weekLayouts.put(MONDAY, mondayLayout);
+        weekLayouts.put(TUESDAY, tuesdayLayout);
+        weekLayouts.put(WEDNESDAY, wednesdayLayout);
+        weekLayouts.put(THURSDAY, thursdayLayout);
+        weekLayouts.put(FRIDAY, fridayLayout);
+        weekLayouts.put(SATURDAY, saturdayLayout);
+        weekLayouts.put(SUNDAY, sundayLayout);
+        activateButtons = new HashMap<>();
+        activateButtons.put(mondayLayout, mondayLayout.findViewById(R.id.button_activate));
+        activateButtons.put(tuesdayLayout, tuesdayLayout.findViewById(R.id.button_activate));
+        activateButtons.put(wednesdayLayout, wednesdayLayout.findViewById(R.id.button_activate));
+        activateButtons.put(thursdayLayout, thursdayLayout.findViewById(R.id.button_activate));
+        activateButtons.put(fridayLayout, fridayLayout.findViewById(R.id.button_activate));
+        activateButtons.put(saturdayLayout, saturdayLayout.findViewById(R.id.button_activate));
+        activateButtons.put(sundayLayout, sundayLayout.findViewById(R.id.button_activate));
+        activated = new ArrayList<>();
+        for(int i=0;i<7;i++) activated.add(false);
+        hoursOf = new HashMap<>();
+        minutesOf = new HashMap<>();
+        String[] minutes = new String[4];
+        for(int i=0;i<4;i++){
+            minutes[i] = String.format("%02d",i*15);
+        }
+        String[] hours = new String[17];
+        for(int i=0;i<17;i++){
+            hours[i] = String.valueOf(i+8);
+        }
+         for(int i=1;i<8;i++){
+            NumberPicker startHour = weekLayouts.get(i).findViewById(R.id.picker_start_hour);
+            NumberPicker startMin = weekLayouts.get(i).findViewById(R.id.picker_start_min);
+            NumberPicker endHour = weekLayouts.get(i).findViewById(R.id.picker_end_hour);
+            NumberPicker endMin = weekLayouts.get(i).findViewById(R.id.picker_end_min);
+//            startHour.setDisplayedValues(hours);
+            startHour.setMinValue(8);
+            startHour.setMaxValue(24);
+            startHour.setEnabled(false);
+//            endHour.setDisplayedValues(hours);
+            endHour.setMinValue(8);
+            endHour.setMaxValue(24);
+            endHour.setEnabled(false);
+            startMin.setDisplayedValues(minutes);
+            startMin.setMinValue(0);
+            startMin.setMaxValue(3);
+            startMin.setEnabled(false);
+            setInput(startMin);
+            endMin.setDisplayedValues(minutes);
+            endMin.setMinValue(0);
+            endMin.setMaxValue(3);
+            endMin.setEnabled(false);
+            setInput(endMin);
+            hoursOf.put(i,new Pair<>(startHour,endHour));
+            minutesOf.put(i,new Pair<>(startMin,endMin));
+        }
     }
 
+    private void setInput(ViewGroup vg) {
+        for(int i = 0; i < vg.getChildCount(); i++) {
+            View child = vg.getChildAt(i);
+            if(child instanceof ViewGroup) {
+                // Recurse
+                setInput((ViewGroup) child);
+            } else if(child instanceof EditText) {
+                // Force InputType
+                ((EditText) child).setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
+        }
+    }
+
+    private void settings(){
+        if(activateButtons.isEmpty()) throw new RuntimeException();
+        if(activateButtons.size() > 7) throw new RuntimeException();
+        activateButtons.get(mondayLayout).setText("月");
+        activateButtons.get(tuesdayLayout).setText("火");
+        activateButtons.get(wednesdayLayout).setText("水");
+        activateButtons.get(thursdayLayout).setText("木");
+        activateButtons.get(fridayLayout).setText("金");
+        activateButtons.get(saturdayLayout).setText("土");
+        activateButtons.get(sundayLayout).setText("日");
+    }
+
+
+
     private void setListeners(){
+
+//        Log.d(TAG,(((CoordinatorLayout)base).isNestedScrollingEnabled()?"True":"False"));
+        base.findViewById(R.id.constraint_scrollable).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG, "[onTouch] constraint under scrollview");
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+                v.requestFocus();
+                return false;
+            }
+        });
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -216,6 +366,28 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
                 }
             }
         });
+        for(int i=1;i<8;++i){
+            int I = i;
+            activateButtons.get(weekLayouts.get(i)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean active = activated.get(I-1);
+                    weekLayouts.get(I).findViewById(R.id.frame_covering).setVisibility((active?View.VISIBLE:View.INVISIBLE));
+                    v.setBackground((!active?
+                            getResources().getDrawable(R.drawable.ripple_background_primary_reverse,null):
+                            getResources().getDrawable(R.drawable.ripple_background_primary,null)));
+                    switchActivation(I,!active);
+                    activated.set(I-1,!active);
+                }
+            });
+        }
+    }
+
+    private void switchActivation(int position, boolean activate){
+        hoursOf.get(position).first.setEnabled(activate);
+        hoursOf.get(position).second.setEnabled(activate);
+        minutesOf.get(position).first.setEnabled(activate);
+        minutesOf.get(position).second.setEnabled(activate);
     }
 
     private boolean existsBlank(String[] reason_){
@@ -266,18 +438,6 @@ public class NewEmployeeFragment extends Fragment implements OnBackKeyPressedLis
         }
         parent.employeeAssigned = -1;
         viewModel.insert(employee);
-        clear();
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        Log.d(TAG, "touched");
-        // FIXME: not Focused to base Window
-        // hide keyboard when touching background
-//        inputMethodManager.hideSoftInputFromWindow(base.getWindowToken(),
-//                InputMethodManager.HIDE_NOT_ALWAYS);
-//        base.requestFocus();
-        return true;
     }
 
 

@@ -58,7 +58,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:paddingBottom="3sp"
-        >
+        android:elevation="20dp">
         <TextView
             android:id="@+id/textView_employeeName"
             android:layout_width="0dp"

@@ -118,7 +118,7 @@ public class EmployeeHomeFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(recyclerView.getAdapter() == null) throw new NullPointerException();
+                if(recyclerView.getAdapter() == null) return;// throw new NullPointerException();
                 int num = recyclerView.getAdapter().getItemCount();
                 for(int i=0;i<num;++i){
                     recyclerView.getAdapter().notifyItemChanged(i);
