@@ -5,10 +5,9 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.attendance_tracking.Model.Employee;
-import com.example.attendance_tracking.Model.EmployeeRepository;
+import com.example.attendance_tracking.Model.Employee.Employee;
+import com.example.attendance_tracking.Model.Employee.EmployeeRepository;
 
 import java.util.List;
 

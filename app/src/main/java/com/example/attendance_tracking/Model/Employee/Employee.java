@@ -1,4 +1,4 @@
-package com.example.attendance_tracking.Model;
+package com.example.attendance_tracking.Model.Employee;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -6,7 +6,8 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 //@Fts4
-@Entity(tableName = "employee_table",
+@Entity(
+//        tableName = "employee_table",
         indices = {
 //        @Index("name"), なぜかエラーになる　参考: https://developer.android.com/training/data-storage/room/defining-data?hl=ja#column-indexing
                     @Index(value = {"first_kana", "family_kana"})}

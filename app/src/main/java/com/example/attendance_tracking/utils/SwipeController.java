@@ -36,6 +36,8 @@ import com.example.attendance_tracking.View.EditEmployeeActivity;
 import com.example.attendance_tracking.View.EmployeeListAdapter;
 import com.example.attendance_tracking.View.EmployeeSearchView;
 
+import com.example.attendance_tracking.View.EditEmployeeActivity.FragNum;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,7 +119,7 @@ public abstract class SwipeController extends ItemTouchHelper.Callback {
                     Log.d(TAG, name);
 //                    ((EditEmployeeActivity)mContext).employee = viewHolder.get();
                     ((EditEmployeeActivity)mContext).employee = ((EmployeeListAdapter)view.getAdapter()).getEmployee(pos);
-                    ((EditEmployeeActivity)mContext).getViewPager().setCurrentItem(EditEmployeeActivity.FragNum.EditEmployee,false);
+                    ((EditEmployeeActivity)mContext).getViewPager().setCurrentItem(FragNum.EditEmployee.get(),false);
                 }
             }
         };

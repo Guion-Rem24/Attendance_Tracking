@@ -7,21 +7,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.attendance_tracking.Model.Employee;
-import com.example.attendance_tracking.Model.EmployeeRepository;
+import com.example.attendance_tracking.Model.Employee.Employee;
+import com.example.attendance_tracking.Model.Employee.EmployeeRepository;
 import com.example.attendance_tracking.OnBackKeyPressedListener;
 import com.example.attendance_tracking.R;
-import com.example.attendance_tracking.ViewModel.EditEmployeeViewModel;
+import com.example.attendance_tracking.ViewModel.EditEmployeeFragmentViewModel;
+import com.example.attendance_tracking.View.EditEmployeeActivity.FragNum;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class EditEmployeeFragment extends Fragment
 
 
     private static final String TAG = "EditEmployeeFragment";
-    private EditEmployeeViewModel viewModel;
+    private EditEmployeeFragmentViewModel viewModel;
 //    private NewEmployeeFragment.OnEmployeeFragmentInteractionListener interactionListener;
     private EditEmployeeActivity parent;
     private EmployeeRepository employeeRepository;
@@ -49,13 +48,12 @@ public class EditEmployeeFragment extends Fragment
 
     public static EditEmployeeFragment newInstance(){ return new EditEmployeeFragment(); }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "[onCreate]");
         parent = (EditEmployeeActivity) getActivity();
-        viewModel = new ViewModelProvider(this).get(EditEmployeeViewModel.class);
+        viewModel = new ViewModelProvider(this).get(EditEmployeeFragmentViewModel.class);
         adapter = new EmployeeListAdapter(parent);
     }
 
@@ -134,7 +132,7 @@ public class EditEmployeeFragment extends Fragment
     public void onBackPressed() {
 //        parent.onResume();
         Log.d(TAG, "[onBackPressed]");
-        parent.getViewPager().setCurrentItem(EditEmployeeActivity.FragNum.HomeEmployee);
+        parent.getViewPager().setCurrentItem(FragNum.HomeEmployee.get());
 
     }
     private void setListeners(){
@@ -150,4 +148,8 @@ public class EditEmployeeFragment extends Fragment
         void onFragmentInteraction(Uri uri);
     }
 
+
+    public void resetCoordinatorView(){
+
+    }
 }

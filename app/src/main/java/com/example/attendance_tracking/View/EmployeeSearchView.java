@@ -22,7 +22,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.attendance_tracking.Model.Employee;
+import com.example.attendance_tracking.Model.Employee.Employee;
 import com.example.attendance_tracking.R;
 
 import java.util.ArrayList;

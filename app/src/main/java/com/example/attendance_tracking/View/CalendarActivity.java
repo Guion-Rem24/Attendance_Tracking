@@ -179,6 +179,7 @@ public class CalendarActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed(){
+        Log.d(TAG, "[onBackPressed]");
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("daydetailBackPressed");
         if(fragment != null) {
             if (fragment instanceof OnBackKeyPressedListener) {
@@ -187,7 +188,6 @@ public class CalendarActivity extends AppCompatActivity
             return;
         }
 
-        Log.v(TAG, "--- on Back Pressed ---");
         MainActivity activity = new MainActivity();
         Intent intent = new android.content.Intent(this, MainActivity.class);
 //        intent.putExtra(EXTRA_DATA, moveMainActivity);

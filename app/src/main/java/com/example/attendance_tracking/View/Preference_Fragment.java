@@ -1,7 +1,10 @@
 package com.example.attendance_tracking.View;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -15,6 +18,7 @@ public class Preference_Fragment extends PreferenceFragmentCompat {
 //    https://mnoqlo.hatenablog.com/entry/2018/10/12/214802
 //    https://android.keicode.com/basics/ui-navigation-drawer-overview.php
 
+    private static final String TAG = "Preference_Fragment";
     public static Preference_Fragment newInstance(String root_Key) {
         Preference_Fragment fragment = new Preference_Fragment();
         Bundle bundle = new Bundle();
@@ -59,6 +63,12 @@ public class Preference_Fragment extends PreferenceFragmentCompat {
         // ActionBarのタイトルに現在表示中のPreferenceScreenのタイトルをセット
         String rootKey = requireArguments().getString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT);
         requireActivity().setTitle(findPreference(rootKey).getTitle());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Log.d(TAG, "[onOptionsItemSelected]");
+        return super.onOptionsItemSelected(item);
     }
 
     /*

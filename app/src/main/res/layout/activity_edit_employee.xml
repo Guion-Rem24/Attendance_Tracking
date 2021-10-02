@@ -93,7 +93,8 @@
                         android:id="@+id/viewPager_editEmployee"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        />
                     <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -106,18 +107,18 @@
 
 <!--                TODO: 各フラグメントで使うFABをこれで統一 -->
 <!--                TODO: もしくは，使う個数分だけFABをセットしておき，必要に応じてVisibleにする-->
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/button_utility"
-                    android:layout_margin="16dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="20dp"
-                    app:background="@drawable/ripple_background_primary"
-                    app:backgroundTint="@color/colorPrimaryDark"
-                    android:clickable="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_edit"/>
+<!--                <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                    android:id="@+id/button_utility"-->
+<!--                    android:layout_margin="16dp"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:elevation="20dp"-->
+<!--                    app:background="@drawable/ripple_background_primary"-->
+<!--                    app:backgroundTint="@color/colorPrimaryDark"-->
+<!--                    android:clickable="true"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:srcCompat="@android:drawable/ic_menu_edit"/>-->
             </androidx.constraintlayout.widget.ConstraintLayout>
 <!--</LinearLayout>-->
 

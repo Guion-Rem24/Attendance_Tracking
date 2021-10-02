@@ -1,4 +1,4 @@
-package com.example.attendance_tracking.Model;
+package com.example.attendance_tracking.Model.Employee;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -6,18 +6,20 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
-import androidx.room.DatabaseConfiguration;
-import androidx.room.InvalidationTracker;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
-@Database(entities = {Employee.class}, version = 2, exportSchema = false)
+import com.example.attendance_tracking.Model.EmployeeWorkTimes;
+import com.example.attendance_tracking.Model.EmployeeWorkTimesDao;
+import com.example.attendance_tracking.Model.WorkTime.WorkTime;
+
+@Database(entities = {Employee.class, WorkTime.class}, version = 3, exportSchema = false)
 public abstract class EmployeeRoomDatabase extends RoomDatabase {
     final static private String TAG = "EmployeeRoomDatabase";
     public abstract EmployeeDao employeeDao();
-
+//    private final EmployeeWorkTimesDao workTimeDao;
+//    public abstract EmployeeWorkTimesDao workTimeDao();
     private static RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback(){
                 @Override
@@ -42,6 +44,7 @@ public abstract class EmployeeRoomDatabase extends RoomDatabase {
                         .build();
             }
         }
+        Log.d(TAG,"...Done");
         return instance;
     }
 

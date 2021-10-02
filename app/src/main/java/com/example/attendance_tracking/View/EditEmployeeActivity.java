@@ -10,34 +10,27 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.attendance_tracking.Model.Employee;
+import com.example.attendance_tracking.Model.Employee.Employee;
 import com.example.attendance_tracking.R;
 
 import com.example.attendance_tracking.View.NewEmployeeFragment.OnNewEmployeeFragmentInteractionListener;
 import com.example.attendance_tracking.View.EditEmployeeFragment.OnEditEmployeeFragmentInteractionListener;
-import com.example.attendance_tracking.ViewModel.EmployeeHomeFragmentViewModel;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,7 +42,7 @@ public class EditEmployeeActivity
                    View.OnTouchListener
 {
 
-    private final String TAG = "EditEmployeeActivity";
+    private static final String TAG = "EditEmployeeActivity";
 
     private Toolbar toolbar;
     private View root;
@@ -58,6 +51,8 @@ public class EditEmployeeActivity
     private ViewPager2 viewPager;
     private ViewPagerAdapter pagerAdapter;
     private InputMethodManager inputMethodManager;
+    private CoordinatorLayout coordinatorLayout;
+    private AppBarLayout appBarLayout;
 
     public Employee employee = null;
 
@@ -79,10 +74,28 @@ public class EditEmployeeActivity
     }
 
 
-    public static class FragNum{
-        public static final int NewEmployee=0;
-        public static final int EditEmployee=1;
-        public static final int HomeEmployee=2;
+    public enum FragNum {
+//        public static final int NewEmployee=0;
+//        public static final int EditEmployee=1;
+//        public static final int HomeEmployee=2;
+        NewEmployee(0),
+        EditEmployee(1),
+        HomeEmployee(2),
+        ;
+        private final int id;
+        FragNum(int i) {
+            this.id = i;
+        }
+        public int get(){return this.id;}
+    };
+    public static FragNum getAs(final int id) {
+        FragNum[] types = FragNum.values();
+        for (FragNum type : types) {
+            if (type.get() == id) {
+                return type;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -96,8 +109,8 @@ public class EditEmployeeActivity
         // ViewPager2: Switching Fragments
         viewPager.setAdapter(pagerAdapter);
         viewPager.setUserInputEnabled(false); // forbid to swipe
-        viewPager.setCurrentItem(FragNum.HomeEmployee, false);
-        viewPager.setOnTouchListener(this/*newEmployeeFragment*/);
+        viewPager.setCurrentItem(FragNum.HomeEmployee.get(), false);
+//        viewPager.setOnTouchListener(this/*newEmployeeFragment*/);
 
         // ToolBar
         toolbar.setTitle("従業員の編集");
@@ -116,18 +129,18 @@ public class EditEmployeeActivity
         if (id == android.R.id.home) {
             Log.d(TAG, "[onBackPressed] on Toolbar");
 
-            switch(viewPager.getCurrentItem()){
-                case FragNum.HomeEmployee:
+            switch(getAs(viewPager.getCurrentItem())){
+                case HomeEmployee:
                     Log.d(TAG, " -- from HomeEmployee");
                     finish();
                     break;
-                case FragNum.NewEmployee:
+                case NewEmployee:
                     Log.d(TAG, " -- from NewEmployee");
-                    viewPager.setCurrentItem(FragNum.HomeEmployee, false);
+                    viewPager.setCurrentItem(FragNum.HomeEmployee.get(), false);
                     break;
-                case FragNum.EditEmployee:
+                case EditEmployee:
                     Log.d(TAG, " -- from EditEmployee");
-                    viewPager.setCurrentItem(FragNum.HomeEmployee, false);
+                    viewPager.setCurrentItem(FragNum.HomeEmployee.get(), false);
                     break;
                 default:
                     finish();
@@ -140,6 +153,24 @@ public class EditEmployeeActivity
                 Toast.makeText(getApplicationContext(),"'設定' is selected...", Toast.LENGTH_LONG).show();
                 Log.d(TAG, "...onOptionsItemSelected is active");
                 Intent intent = new android.content.Intent(this, SettingsActivity.class);
+//                Fragment frag = null;
+//                switch(viewPager.getCurrentItem()){
+//                    case FragNum.EditEmployee:
+//                        frag = editEmployeeFragment;
+//                        break;
+//                    case FragNum.HomeEmployee:
+//                        frag = homeEmployeeFragment;
+//                        break;
+//                    case FragNum.NewEmployee:
+//                        frag = newEmployeeFragment;
+//                        break;
+//                }
+//                if(frag != null) {
+//                    getSupportFragmentManager()
+//                            .beginTransaction()
+//                            .attach(frag);
+//                }
+
                 startActivity(intent);
                 return true;
             case R.id.optionsMenu_help:
@@ -226,13 +257,35 @@ public class EditEmployeeActivity
 
     private void findViews(){
         root = findViewById(R.id.layout_editemployee_root);
-
         pagerAdapter = new ViewPagerAdapter(this);
         viewPager = findViewById(R.id.viewPager_editEmployee);
         toolbar = findViewById(R.id.toolbar_editEmployee);
         inputMethodManager = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
+        appBarLayout = findViewById(R.id.appbar_editEmployee);
     }
     private void setListeners(){
+        // action when Fragment changed by viewPager
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback(){
+            @Override
+            public void onPageSelected(int position) {
+                Log.d(TAG, "[onPageSelected]:"+position);
+
+                switch(getAs(position)){
+                    case EditEmployee:
+                        if(editEmployeeFragment!=null) editEmployeeFragment.resetCoordinatorView();
+                        break;
+                    case NewEmployee:
+                        if(newEmployeeFragment!=null) newEmployeeFragment.resetCoordinatorView();
+                        break;
+                    case HomeEmployee:
+                        if(homeEmployeeFragment!=null) homeEmployeeFragment.resetCoordinatorView();
+                        break;
+                }
+
+                appBarLayout.setExpanded(true,false);
+                super.onPageSelected(position);
+            }
+        });
 
     }
 
@@ -253,16 +306,17 @@ public class EditEmployeeActivity
         @Override
         public Fragment createFragment(int position) {
             Fragment fragment = null;
-            switch(position){
-                case FragNum.NewEmployee:
+            Log.d(TAG, "position:" + position);
+            switch(getAs(position)){
+                case NewEmployee:
                     newEmployeeFragment = NewEmployeeFragment.newInstance();
                     fragment = newEmployeeFragment;
                     break;
-                case FragNum.EditEmployee:
+                case EditEmployee:
                     editEmployeeFragment = EditEmployeeFragment.newInstance();
                     fragment = editEmployeeFragment;
                     break;
-                case FragNum.HomeEmployee:
+                case HomeEmployee:
                     homeEmployeeFragment = EmployeeHomeFragment.newInstance();
                     fragment = homeEmployeeFragment;
                     break;
@@ -283,7 +337,12 @@ public class EditEmployeeActivity
 
     public
     ViewPager2 getViewPager(){ return viewPager; }
-
+    public
+    AppBarLayout getAppBarLayout() { return appBarLayout; }
+    public
+    CoordinatorLayout getCoordinatorLayout() { return (CoordinatorLayout) root;}
+    public
+    InputMethodManager getInputMethodManager() { return inputMethodManager; }
 //    @Override
 //    public boolean onTouchEvent(MotionEvent event){
 //        // hide keyboard when touching background
@@ -297,12 +356,17 @@ public class EditEmployeeActivity
     public void onBackPressed(){
         Log.d(TAG, "[onBackPressed]");
         int current = viewPager.getCurrentItem();
-        switch (current){
-            case FragNum.EditEmployee:
-            case FragNum.NewEmployee:
-                viewPager.setCurrentItem(FragNum.HomeEmployee, false);
+        switch (getAs(current)){
+            case EditEmployee:
+                viewPager.setCurrentItem(FragNum.HomeEmployee.get(), false);
                 break;
-            case FragNum.HomeEmployee:
+            case NewEmployee:
+                appBarLayout.removeOnOffsetChangedListener(newEmployeeFragment.getOffsetChangedListener());
+                newEmployeeFragment.getNestedScrollView().fullScroll(NestedScrollView.FOCUS_UP);
+                getAppBarLayout().setExpanded(true,false);
+                viewPager.setCurrentItem(FragNum.HomeEmployee.get(), false);
+                break;
+            case HomeEmployee:
                 Intent intent = new android.content.Intent(this, CalendarActivity.class);
                 startActivity(intent);
         }
@@ -322,6 +386,23 @@ public class EditEmployeeActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "[onResume]");
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "[onPause]");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        Log.d(TAG,"[onResumeFragments]");
+        super.onResumeFragments();
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -330,12 +411,15 @@ public class EditEmployeeActivity
 //        root.performClick();
         // FIXME: not Focused to base Window
         // hide keyboard when touching background
-        View currentView = getCurrentFocus();
-        if(currentView != null){
-            inputMethodManager.hideSoftInputFromWindow(currentView.getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-            currentView.requestFocus();
-        }
+//        View currentView = getCurrentFocus();
+//        if(currentView != null){
+//            inputMethodManager.hideSoftInputFromWindow(currentView.getWindowToken(),
+//                    InputMethodManager.HIDE_NOT_ALWAYS);
+//            currentView.requestFocus();
+//        }
+        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        v.requestFocus();
         return true;
     }
 

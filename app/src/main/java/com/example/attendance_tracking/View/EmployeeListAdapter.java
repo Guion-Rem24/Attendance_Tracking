@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.attendance_tracking.Model.Employee;
+import com.example.attendance_tracking.Model.Employee.Employee;
 import com.example.attendance_tracking.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -126,7 +126,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
 
     @Override
     public int getItemCount() {
-        return listEmployees.size();
+        return (listEmployees!=null?listEmployees.size():0);
     }
 
     public void remove(int position){
