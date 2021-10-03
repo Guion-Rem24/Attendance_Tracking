@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 //@Fts4
 @Entity(
-//        tableName = "employee_table",
+        tableName = "employee_table",
         indices = {
 //        @Index("name"), なぜかエラーになる　参考: https://developer.android.com/training/data-storage/room/defining-data?hl=ja#column-indexing
                     @Index(value = {"first_kana", "family_kana"})}

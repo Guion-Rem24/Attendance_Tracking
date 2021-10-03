@@ -14,14 +14,14 @@ public interface WorkTimeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(WorkTime time);
 //    @Delete
-    @Query("DELETE FROM WorkTime")
+    @Query("DELETE FROM work_time_table")
     void deleteAll();
-    @Query("DELETE FROM WorkTime WHERE `index` LIKE :id ")
+    @Query("DELETE FROM work_time_table WHERE `index` LIKE :id ")
     void delete(int id);
 
-    @Query("SELECT * FROM WorkTime")
+    @Query("SELECT * FROM work_time_table")
     public LiveData<List<WorkTime>> getAllWorkTimes();
-    @Query("SELECT * FROM WorkTime WHERE workDay LIKE :workDay")
+    @Query("SELECT * FROM work_time_table WHERE workDay LIKE :workDay")
     public LiveData<List<WorkTime>> getAllWorkTimesAt(long workDay);
 
 }

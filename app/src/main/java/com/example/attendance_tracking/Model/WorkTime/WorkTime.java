@@ -8,7 +8,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(
-//        tableName = "work_time_table"
+        tableName = "work_time_table"
 //        foreignKeys = @ForeignKey(entity = Employee.class,
 //                                    parentColumns = "id",
 //                                    childColumns = "user_id",

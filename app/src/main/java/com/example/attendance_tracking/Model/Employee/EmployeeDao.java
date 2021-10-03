@@ -15,10 +15,10 @@ import java.util.List;
 
 @Dao
 public interface EmployeeDao {
-    @Query("SELECT * FROM Employee")
+    @Query("SELECT * FROM employee_table")
     public LiveData<List<Employee>> getEmployees();
 
-    @Query("DELETE FROM Employee")
+    @Query("DELETE FROM employee_table")
     public void delete();
 
 //    @Query("DELETE FROM employee_table WHERE id = employee.id")
@@ -26,7 +26,7 @@ public interface EmployeeDao {
 
     @Transaction
 //    @Query("SELECT * FROM Employee")
-    @Query("SELECT * FROM Employee")
+    @Query("SELECT * FROM employee_table")
     LiveData<List<EmployeeWorkTimes>> getEmployeeWorkTimes();
 
     @Delete
@@ -36,6 +36,6 @@ public interface EmployeeDao {
     void insert(Employee employee);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT fixed_time FROM Employee WHERE id LIKE :id")
+    @Query("SELECT fixed_time FROM employee_table WHERE id LIKE :id")
     String getFixedTime(int id);
 }

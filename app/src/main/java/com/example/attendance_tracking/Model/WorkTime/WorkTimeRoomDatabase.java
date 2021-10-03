@@ -32,7 +32,7 @@ public abstract class WorkTimeRoomDatabase extends RoomDatabase {
             synchronized (WorkTimeRoomDatabase.class){
                 Log.d(TAG, "Database create");
                 instance = Room.databaseBuilder(context.getApplicationContext(),
-                        WorkTimeRoomDatabase.class, "work_time_table")
+                        WorkTimeRoomDatabase.class, "work_time_database")
                         .fallbackToDestructiveMigration()
                         .addCallback(sRoomDatabaseCallback)
                         .build();

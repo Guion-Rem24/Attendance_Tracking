@@ -14,7 +14,9 @@ import com.example.attendance_tracking.Model.EmployeeWorkTimes;
 import com.example.attendance_tracking.Model.EmployeeWorkTimesDao;
 import com.example.attendance_tracking.Model.WorkTime.WorkTime;
 
-@Database(entities = {Employee.class, WorkTime.class}, version = 3, exportSchema = false)
+import java.io.File;
+
+@Database(entities = {Employee.class, WorkTime.class}, version = 5, exportSchema = false)
 public abstract class EmployeeRoomDatabase extends RoomDatabase {
     final static private String TAG = "EmployeeRoomDatabase";
     public abstract EmployeeDao employeeDao();
@@ -41,6 +43,7 @@ public abstract class EmployeeRoomDatabase extends RoomDatabase {
                         EmployeeRoomDatabase.class, "employee_database")
                         .fallbackToDestructiveMigration()
                         .addCallback(sRoomDatabaseCallback)
+                        .createFromAsset("predatabase/employee_database")
                         .build();
             }
         }
